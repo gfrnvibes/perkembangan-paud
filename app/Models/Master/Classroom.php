@@ -26,4 +26,6 @@ class Classroom extends Model
     {
         return $this->belongsToMany(User::class, 'classroom_user');
     }
+    
+    
 }
