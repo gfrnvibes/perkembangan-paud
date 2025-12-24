@@ -11,10 +11,10 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('topics', function (Blueprint $table) {
+        Schema::create('classrooms', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('curriculum_plan_id')->constrained()->onDelete('cascade');
-    $table->string('name');
+            $table->foreignId('academic_year_id')->constrained()->onDelete('cascade');
+    $table->string('name'); // Contoh: Kelompok A1, RA-B Matahari
     $table->softDeletes();
             $table->timestamps();
         });
@@ -25,6 +25,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('topics');
+        Schema::dropIfExists('classrooms');
     }
 };

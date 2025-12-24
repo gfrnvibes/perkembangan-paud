@@ -13,6 +13,11 @@ return new class extends Migration
     {
         Schema::create('students', function (Blueprint $table) {
             $table->id();
+            $table->string('name');
+    $table->string('nisn')->nullable()->unique();
+    $table->date('dob'); // Date of Birth
+    $table->enum('gender', ['L', 'P']);
+    $table->softDeletes();
             $table->timestamps();
         });
     }

@@ -13,6 +13,8 @@ return new class extends Migration
     {
         Schema::create('plan_cp_element', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('curriculum_plan_id')->constrained()->onDelete('cascade');
+    $table->foreignId('cp_element_id')->constrained()->onDelete('cascade');
             $table->timestamps();
         });
     }

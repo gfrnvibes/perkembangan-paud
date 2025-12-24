@@ -13,6 +13,11 @@ return new class extends Migration
     {
         Schema::create('curriculum_plans', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('academic_year_id')->constrained();
+    $table->integer('semester'); // 1 atau 2
+    $table->integer('week_number'); // 1-17
+    $table->string('theme');
+    $table->softDeletes();
             $table->timestamps();
         });
     }

@@ -13,6 +13,9 @@ return new class extends Migration
     {
         Schema::create('learning_objectives', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('curriculum_plan_id')->constrained()->onDelete('cascade');
+    $table->text('description');
+    $table->softDeletes();
             $table->timestamps();
         });
     }

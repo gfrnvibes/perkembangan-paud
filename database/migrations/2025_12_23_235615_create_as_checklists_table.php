@@ -13,6 +13,11 @@ return new class extends Migration
     {
         Schema::create('as_checklists', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('student_id')->constrained();
+    $table->foreignId('learning_objective_id')->constrained();
+    $table->date('date');
+    $table->enum('status', ['muncul', 'tidak_muncul', 'perlu_bimbingan']);
+    $table->softDeletes();
             $table->timestamps();
         });
     }

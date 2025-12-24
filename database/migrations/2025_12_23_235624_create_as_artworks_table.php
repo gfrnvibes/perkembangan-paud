@@ -13,6 +13,11 @@ return new class extends Migration
     {
         Schema::create('as_artworks', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('student_id')->constrained();
+    $table->date('date');
+    $table->text('child_speech')->nullable();
+    $table->text('teacher_analysis')->nullable(); // Target AI Generate
+    $table->softDeletes();
             $table->timestamps();
         });
     }
