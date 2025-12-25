@@ -4,6 +4,7 @@ namespace App\Filament\Resources\Students;
 
 use UnitEnum;
 use BackedEnum;
+use App\Models\User;
 use Filament\Tables\Table;
 use Filament\Schemas\Schema;
 use App\Models\Master\Student;
@@ -54,7 +55,13 @@ class StudentResource extends Resource
                     ->label('Kelas')
                     ->relationship('classrooms', 'name')
                     ->preload()
+                    ->multiple()
                     ->required()
+                    ->native(false),
+                Select::make('parents')
+                    ->relationship('parents', 'name', fn (Builder $query) =>
+                            $query->whereHas('roles', fn ($q) => $q->where('name', 'parent')))
+                    ->preload()
                     ->native(false)
             ]);
     }
@@ -75,9 +82,6 @@ class StudentResource extends Resource
     public static function table(Table $table): Table
     {
         return $table
-            ->groups([
-                '',
-            ])
             ->columns([
                 TextColumn::make('nisn')
                     ->label('NISN'),
@@ -87,6 +91,8 @@ class StudentResource extends Resource
                 TextColumn::make('classrooms.name')
                     ->label('Kelas')
                     ->sortable(),
+                TextColumn::make('parents.name')
+                    ->label('Orang Tua'),
                 TextColumn::make('dob')
                     ->label('Tanggal Lahir'),
             ])
@@ -124,5 +130,20 @@ class StudentResource extends Resource
             ->withoutGlobalScopes([
                 SoftDeletingScope::class,
             ]);
+    }
+
+    public static function getEloquentQuery(): Builder
+    {
+        $query = parent::getEloquentQuery();
+        $user = auth()->user();
+
+        // Kalau bukan parent, biarin default (misal admin)
+        if (! $user?->hasRole('parent')) {
+            return $query;
+        }
+
+        return $query->whereHas('parents', function ($q) use ($user) {
+            $q->where('user_id', $user->id);
+        });
     }
 }

@@ -18,7 +18,7 @@ class Student extends Model
     }
 
     public function classrooms()
-{
-    return $this->belongsToMany(Classroom::class, 'classroom_student');
-}
+    {
+        return $this->belongsToMany(Classroom::class, 'classroom_student');
+    }
 }

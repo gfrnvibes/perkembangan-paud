@@ -191,4 +191,20 @@ class AsAnecdoteResource extends Resource
                 SoftDeletingScope::class,
             ]);
     }
+
+    
+    public static function getEloquentQuery(): Builder
+    {
+        $query = parent::getEloquentQuery();
+        $user = auth()->user();
+
+        // Kalau bukan parent, biarin default (misal admin)
+        if (! $user?->hasRole('parent')) {
+            return $query;
+        }
+
+        return $query->whereHas('student.parents', function ($q) use ($user) {
+            $q->where('user_id', $user->id);
+        });
+    }
 }
