@@ -23,8 +23,8 @@ class CurriculumPlanResource extends Resource
 {
     protected static ?string $model = CurriculumPlan::class;
 
-    protected static string|BackedEnum|null $navigationIcon = Heroicon::AcademicCap;
-    protected static ?string $navigationLabel = 'Rencana Kurikulum';
+    protected static string|BackedEnum|null $navigationIcon = Heroicon::BookOpen;
+    protected static ?string $navigationLabel = 'Kelola RPP';
 
     protected static string | UnitEnum | null $navigationGroup = 'Kurikulum';
 

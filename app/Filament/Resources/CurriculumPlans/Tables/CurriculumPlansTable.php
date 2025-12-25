@@ -19,6 +19,9 @@ class CurriculumPlansTable
     public static function configure(Table $table): Table
     {
         return $table
+            ->groups([
+                'semester',
+            ])
             ->columns([
                 TextColumn::make('academicYear.year_range')
                     ->label('T. A')
@@ -44,7 +47,7 @@ class CurriculumPlansTable
 
                 TextColumn::make('cpElements.name')
                     ->label('Elemen CP')
-                    ->badge()
+                    ->bulleted()
                     ->color('gray')
                     ->separator(','),
 

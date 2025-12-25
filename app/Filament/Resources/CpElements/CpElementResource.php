@@ -28,10 +28,10 @@ class CpElementResource extends Resource
 {
     protected static ?string $model = CpElement::class;
 
-    protected static string|BackedEnum|null $navigationIcon = Heroicon::RocketLaunch;
+    protected static string|BackedEnum|null $navigationIcon = Heroicon::Bookmark;
     protected static ?string $navigationLabel = 'Kelola Element CP';
 
-    protected static string | UnitEnum | null $navigationGroup = 'Master';
+    protected static string | UnitEnum | null $navigationGroup = 'Kurikulum';
 
     public static function form(Schema $schema): Schema
     {

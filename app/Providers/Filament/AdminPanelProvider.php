@@ -28,6 +28,8 @@ class AdminPanelProvider extends PanelProvider
             ->id('admin')
             ->path('admin')
             ->login()
+            ->spa()
+            ->sidebarCollapsibleOnDesktop()
             ->colors([
                 'primary' => Color::Amber,
             ])
@@ -54,6 +56,11 @@ class AdminPanelProvider extends PanelProvider
             ])
             ->authMiddleware([
                 Authenticate::class,
-            ]);
+            ])
+            ->brandLogo(asset('images/paud.png'))
+            ->brandLogoHeight('2rem')
+            ->brandName('RA Nurul Amin')
+            ->favicon(asset('images/paud.png'))
+            ;
     }
 }

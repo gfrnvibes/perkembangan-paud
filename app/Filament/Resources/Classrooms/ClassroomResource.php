@@ -23,12 +23,14 @@ use Filament\Tables\Filters\TrashedFilter;
 use Filament\Actions\ForceDeleteBulkAction;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use App\Filament\Resources\Classrooms\Pages\ManageClassrooms;
+use UnitEnum;
 
 class ClassroomResource extends Resource
 {
     protected static ?string $model = Classroom::class;
 
-    protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedRectangleStack;
+    protected static string|BackedEnum|null $navigationIcon = Heroicon::BuildingLibrary;
+    protected static string | UnitEnum | null $navigationGroup = 'Master';
 
     public static function form(Schema $schema): Schema
     {
@@ -44,6 +46,7 @@ class ClassroomResource extends Resource
                     ])
                     ->native(false),
                 TextInput::make('name')
+                    ->label('Nama Kelas')
                     ->required(),
             ]);
     }
@@ -52,8 +55,10 @@ class ClassroomResource extends Resource
     {
         return $table
             ->columns([
-                TextColumn::make('academicYear.year_range'),
+                TextColumn::make('academicYear.year_range')
+                    ->label('Tahun Ajaran'),
                 TextColumn::make('name')
+                    ->label('Kelas'),
             ])
             ->filters([
                 TrashedFilter::make(),
