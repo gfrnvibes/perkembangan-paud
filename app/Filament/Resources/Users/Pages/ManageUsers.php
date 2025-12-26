@@ -9,11 +9,13 @@ use Filament\Resources\Pages\ManageRecords;
 class ManageUsers extends ManageRecords
 {
     protected static string $resource = UserResource::class;
+    protected ?string $heading = 'Orang Tua Siswa';
 
     protected function getHeaderActions(): array
     {
         return [
-            CreateAction::make(),
+            CreateAction::make()
+                ->modalHeading('Buat Data Orang Tua Siswa Baru'),
         ];
     }
 }

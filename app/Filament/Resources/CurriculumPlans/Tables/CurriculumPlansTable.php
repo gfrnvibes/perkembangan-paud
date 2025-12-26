@@ -12,6 +12,7 @@ use Filament\Actions\ViewAction;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Filters\TrashedFilter;
+use Filament\Tables\Grouping\Group;
 use Filament\Tables\Table;
 
 class CurriculumPlansTable
@@ -21,35 +22,38 @@ class CurriculumPlansTable
         return $table
             ->groups([
                 'semester',
+                Group::make('academicYear.year_range')
+                    ->label('Tahun Ajaran')
             ])
+            ->defaultGroup('semester')
             ->columns([
                 TextColumn::make('academicYear.year_range')
                     ->label('T. A')
+                    ->toggleable(isToggledHiddenByDefault: true)
                     ->sortable(),
-                    
                 TextColumn::make('semester')
-                    ->label('Smt')
+                    ->label('Semester')
                     ->badge()
                     ->color(fn (string $state): string => match ($state) {
                         '1' => 'info',
                         '2' => 'success',
-                    }),
+                    })
+                    ->toggleable(isToggledHiddenByDefault: true),
 
                 TextColumn::make('week_number')
                     ->label('Minggu')
                     ->sortable()
                     ->formatStateUsing(fn ($state) => "M-{$state}"),
+                
+                TextColumn::make('cpElements.name')
+                    ->label('Elemen CP')
+                    ->bulleted()
+                    ->color('gray'),
 
                 TextColumn::make('theme')
                     ->label('Tema')
                     ->searchable()
                     ->wrap(),
-
-                TextColumn::make('cpElements.name')
-                    ->label('Elemen CP')
-                    ->bulleted()
-                    ->color('gray')
-                    ->separator(','),
 
                 TextColumn::make('topics.name')
                     ->label('Topik')

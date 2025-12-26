@@ -29,6 +29,8 @@ class UserResource extends Resource
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::UserGroup;
     protected static string | UnitEnum | null $navigationGroup = 'Master';
+    protected static ?string $navigationLabel = 'Orang Tua Siswa';
+    protected static ?string $slug = 'orang-tua-siswa';
 
     public static function form(Schema $schema): Schema
     {
@@ -87,8 +89,6 @@ class UserResource extends Resource
                     ->visible(fn () => ! auth()->user()?->hasRole('teacher'))
                     ->badge()
                     ->placeholder('-'),
-                TextColumn::make('stundents.name')
-                    ->visible(fn () => ! auth()->user()?->hasRole('super_admin')),
                 TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()

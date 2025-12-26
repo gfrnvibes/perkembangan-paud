@@ -5,11 +5,13 @@ namespace App\Providers\Filament;
 use Filament\Panel;
 use Filament\PanelProvider;
 use Filament\Pages\Dashboard;
+use App\Filament\Pages\Auth\Login;
 use Filament\Support\Colors\Color;
 use Filament\Widgets\AccountWidget;
 use Filament\Widgets\FilamentInfoWidget;
 use Filament\Http\Middleware\Authenticate;
 use App\Filament\Pages\Auth\TeacherRegister;
+use App\Http\Middleware\BlockParentFromAdmin;
 use Illuminate\Session\Middleware\StartSession;
 use Illuminate\Cookie\Middleware\EncryptCookies;
 use Filament\Http\Middleware\AuthenticateSession;
@@ -30,7 +32,7 @@ class AdminPanelProvider extends PanelProvider
             ->id('admin')
             ->path('admin')
             ->login()
-            ->registration(TeacherRegister::class)
+            ->registration()
             ->spa()
             ->sidebarCollapsibleOnDesktop()
             ->colors([
@@ -59,6 +61,7 @@ class AdminPanelProvider extends PanelProvider
             ])
             ->authMiddleware([
                 Authenticate::class,
+                BlockParentFromAdmin::class
             ])
             ->brandLogo(asset('images/paud.png'))
             ->brandLogoHeight('2rem')

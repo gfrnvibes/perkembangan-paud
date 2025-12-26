@@ -10,6 +10,7 @@ class CreateAsChecklist extends CreateRecord
 {
     protected static string $resource = AsChecklistResource::class;
 
+
     protected function handleRecordCreation(array $data): \Illuminate\Database\Eloquent\Model
     {
         $assessments = $data['assessments']; // Ambil data dari repeater

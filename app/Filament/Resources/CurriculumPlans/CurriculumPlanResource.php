@@ -27,6 +27,8 @@ class CurriculumPlanResource extends Resource
     protected static ?string $navigationLabel = 'Kelola RPP';
 
     protected static string | UnitEnum | null $navigationGroup = 'Kurikulum';
+    protected static ?string $slug = 'kelola-rpp';
+    protected static ?string $pluralModelLabel = 'Kelola RPP';
 
     public static function form(Schema $schema): Schema
     {

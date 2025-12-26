@@ -26,7 +26,9 @@ class AsChecklistResource extends Resource
     protected static string|BackedEnum|null $navigationIcon = Heroicon::CheckCircle;
     protected static string | UnitEnum | null $navigationGroup = 'Assessment';
     protected static ?string $navigationLabel = 'Checklist';
-
+    protected static ?string $slug = 'checklist';
+    protected static ?string $pluralModelLabel = 'Cheklist';
+    
     public static function form(Schema $schema): Schema
     {
         return AsChecklistForm::configure($schema);

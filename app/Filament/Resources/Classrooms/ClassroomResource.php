@@ -30,7 +30,9 @@ class ClassroomResource extends Resource
     protected static ?string $model = Classroom::class;
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::BuildingLibrary;
+    protected static ?string $navigationLabel = 'Ruang Kelas';
     protected static string | UnitEnum | null $navigationGroup = 'Master';
+    protected static ?string $slug = 'ruang-kelas';
 
     public static function form(Schema $schema): Schema
     {

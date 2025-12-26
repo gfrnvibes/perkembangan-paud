@@ -10,10 +10,13 @@ class ManageStudents extends ManageRecords
 {
     protected static string $resource = StudentResource::class;
 
+    protected ?string $heading = 'Kelola Siswa';
+
     protected function getHeaderActions(): array
     {
         return [
-            CreateAction::make(),
+            CreateAction::make()
+                ->modalHeading('Buat Data Siswa Baru'),
         ];
     }
 }

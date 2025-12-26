@@ -9,11 +9,13 @@ use Filament\Resources\Pages\ManageRecords;
 class ManageAsAnecdotes extends ManageRecords
 {
     protected static string $resource = AsAnecdoteResource::class;
+    protected ?string $heading = 'Catatan Anekdot';
 
     protected function getHeaderActions(): array
     {
         return [
-            CreateAction::make(),
+            CreateAction::make()
+                ->modalHeading('Buat Catatan Anekdot Siswa'),
         ];
     }
 }

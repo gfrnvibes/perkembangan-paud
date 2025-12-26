@@ -25,7 +25,7 @@ class AsChecklist extends Model
     }
 
     public function classrooms()
-{
+    {
     return $this->belongsToMany(Classroom::class, 'classroom_student');
-}
+    }
 }

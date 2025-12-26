@@ -81,7 +81,7 @@ class CurriculumPlanForm
                                 ->unique(ignoreRecord: true, modifyRuleUsing: function ($rule, $get) {
                                     return $rule->where('academic_year_id', $get('academic_year_id'))
                                                 ->where('semester', $get('semester'));
-                                }),
+                                })->native(false),
                             ]),
 
                             Grid::make(2)->schema([
@@ -90,6 +90,10 @@ class CurriculumPlanForm
                                     ->multiple()
                                     ->preload()
                                     ->required()
+                                    ->createOptionForm([
+                                        TextInput::make('name')
+                                            ->required(),
+                                    ])
                                     ->label('Elemen CP')
                                     ->helperText('Pilih satu atau lebih Elemen CP untuk minggu ini.'),
         
@@ -103,31 +107,27 @@ class CurriculumPlanForm
 
 
                         // Repeater untuk Topik
-                        Section::make('Daftar Topik')
+                        Section::make('Topik dan Tujuan Pembelajaran')
                             ->description('Input beberapa topik yang sesuai dengan tema minggu ini.')
-                            ->columnSpan(1)
+                            ->columnSpanFull()
                             ->schema([
                                 Repeater::make('topics')
+                                    ->label('Topik Pembelajaran')
                                     ->table([
-                                        TableColumn::make('Nama Topik'),
+                                        TableColumn::make('Deskripsi Topik'),
                                     ])
                                     ->relationship() // Mengacu ke relasi hasMany di Model
                                     ->schema([
                                         TextInput::make('name')
-                                            ->label('Nama Topik')
+                                            ->label('Deskripsi Topik')
                                             ->required(),
                                     ])
                                     ->addActionlabel('Tambah Topik')
                                     ->grid(1),
-                            ]),
-
-                        // Repeater untuk Tujuan Pembelajaran (TP)
-                        Section::make('Tujuan Pembelajaran (TP)')
-                            ->columnSpan(1)
-                            ->schema([
-                                Repeater::make('learningObjectives')
+                                                                Repeater::make('learningObjectives')
+                                    ->label('Tujuan Pembelajaran')
                                     ->table([
-                                        TableColumn::make('Butir TP'),
+                                        TableColumn::make('Deskripsi TP'),
                                     ])
                                     ->relationship() // Mengacu ke relasi hasMany di Model
                                     ->schema([
@@ -137,7 +137,15 @@ class CurriculumPlanForm
                                             ->rows(2),
                                     ])
                                     ->addActionLabel('Tambah TP'),
-                            ]),
+                            ])->columnSpanFull(),
+
+                        // Repeater untuk Tujuan Pembelajaran (TP)
+                        // Section::make('Tujuan Pembelajaran (TP)')
+                        //     
+                        //     ->columnSpan(1)
+                        //     ->schema([
+
+                            // ]),
                     
             ]);
     }

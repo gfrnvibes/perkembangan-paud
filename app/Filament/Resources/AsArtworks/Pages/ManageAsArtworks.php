@@ -9,11 +9,13 @@ use Filament\Resources\Pages\ManageRecords;
 class ManageAsArtworks extends ManageRecords
 {
     protected static string $resource = AsArtworkResource::class;
+    protected static ?string $title = 'Hasil Karya';
 
     protected function getHeaderActions(): array
     {
         return [
-            CreateAction::make(),
+            CreateAction::make()
+                ->modalHeading('Buat Hasil Karya Siswa'),
         ];
     }
 }

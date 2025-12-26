@@ -44,6 +44,7 @@ class AsAnecdoteResource extends Resource
     protected static string|BackedEnum|null $navigationIcon = Heroicon::DocumentText;
     protected static string | UnitEnum | null $navigationGroup = 'Assessment';
     protected static ?string $navigationLabel = 'Anekdot';
+    protected static ?string $slug = 'anekdot';
 
     public static function form(Schema $schema): Schema
     {
@@ -58,23 +59,28 @@ class AsAnecdoteResource extends Resource
                         ->searchable()
                         ->native(false),
                     TextInput::make('location')
+                        ->label('Lokasi')
                         ->required(),
                 ])->columnSpanFull(),
                 Grid::make(2)->schema([
                     DatePicker::make('date')
+                        ->label('Tanggal')
                         ->required()
                         ->default(now())
                         ->displayFormat('d/m/Y'),
                     TimePicker::make('time')
+                        ->label('Waktu')
                         ->default(now())
                         ->seconds(false)
                         ->required(),
                 ])->columnSpanFull(),
                 Textarea::make('description')
+                    ->label('Deskripsi')
                     ->required()
                     // ->placeholder('Gunakan Speech to Text bawaan keyboard untuk mempercepat pengisian')
                     ->columnSpanFull(),
                 Textarea::make('teacher_analysis')
+                    ->label('Analisis Guru')
                     ->required()
                     ->columnSpanFull(),
                 Select::make('cpElements')
@@ -85,6 +91,7 @@ class AsAnecdoteResource extends Resource
                     ->native(false)
                     ->required(),
                 SpatieMediaLibraryFileUpload::make('image')
+                    ->label('Dokumentasi')
                     ->multiple()
                     ->image()
             ]);
@@ -95,19 +102,27 @@ class AsAnecdoteResource extends Resource
         return $schema
             ->components([
                 Grid::make(4)->schema([
-                    TextEntry::make('student.name'),
-                    TextEntry::make('date'),
-                    TextEntry::make('time'),
-                    TextEntry::make('location'),
+                    TextEntry::make('student.name')
+                        ->label('Nama Siswa'),
+                    TextEntry::make('date')
+                        ->label('Tanggal'),
+                    TextEntry::make('time')
+                        ->label('Waktu'),
+                    TextEntry::make('location')
+                        ->label('Lokasi'),
                 ])->columnSpanFull(),
                 TextEntry::make('description')
+                    ->label('Deskripsi')
                     ->columnSpanFull(),
                 TextEntry::make('teacher_analysis')
+                    ->label('Analisis Guru')
                     ->columnSpanFull(),
                 TextEntry::make('cpElements.name')
+                    ->label('Element CP')
                     ->badge()
                     ->bulleted(),
                 SpatieMediaLibraryImageEntry::make('image')
+                    ->label('Dokumentasi')
                     ->columnSpanFull()
             ]);
     }
@@ -117,14 +132,19 @@ class AsAnecdoteResource extends Resource
         return $table
             ->columns([
                 TextColumn::make('student.name')
+                    ->label('Nama Siswa')
                     ->searchable(),
                 TextColumn::make('date')
+                    ->label('Tanggal')
                     ->toggleable(),
                 TextColumn::make('time')
-                    ->toggleable(),
+                    ->label('Waktu')
+                    ->toggleable(isToggledHiddenByDefault:true),
                 TextColumn::make('location')
+                    ->label('Lokasi')
                     ->toggleable(),
                 TextColumn::make('description')
+                    ->label('Deskripsi')
                     ->limit(20)
                     ->tooltip(function (TextColumn $column): ?string {
                         $state = $column->getState();
@@ -137,6 +157,7 @@ class AsAnecdoteResource extends Resource
                         return $state;
                     }),
                 TextColumn::make('teacher_analysis')
+                    ->label('Analisis Guru')
                     ->limit(20)
                     ->tooltip(function (TextColumn $column): ?string {
                         $state = $column->getState();
@@ -149,9 +170,12 @@ class AsAnecdoteResource extends Resource
                         return $state;
                     }),
                 TextColumn::make('cpElements.name')
+                    ->label('Element CP')
                     ->badge()
                     ->bulleted(),
                 SpatieMediaLibraryImageColumn::make('image')
+                    ->label('Dokumentasi')
+                    ->placeholder('Tidak ada dokumentasi')
                     ->stacked()
                     ->circular()
                     ->limit(3)

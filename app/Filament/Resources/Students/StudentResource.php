@@ -35,6 +35,8 @@ class StudentResource extends Resource
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::AcademicCap;
     protected static string | UnitEnum | null $navigationGroup = 'Master';
+    protected static ?string $navigationLabel = 'Siswa';
+    protected static ?string $slug = 'siswa';
 
     public static function form(Schema $schema): Schema
     {

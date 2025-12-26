@@ -9,11 +9,13 @@ use Filament\Resources\Pages\ManageRecords;
 class ManageClassrooms extends ManageRecords
 {
     protected static string $resource = ClassroomResource::class;
+    protected ?string $heading = 'Ruang Kelas';
 
     protected function getHeaderActions(): array
     {
         return [
-            CreateAction::make(),
+            CreateAction::make()
+                ->modalHeading('Buat Ruang Kelas'),
         ];
     }
 }

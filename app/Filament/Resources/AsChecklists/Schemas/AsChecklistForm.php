@@ -4,6 +4,7 @@ namespace App\Filament\Resources\AsChecklists\Schemas;
 
 use Filament\Schemas\Schema;
 use App\Models\Master\Classroom;
+use Filament\Forms\Components\Radio;
 use Filament\Forms\Components\Select;
 use Filament\Schemas\Components\Grid;
 use Filament\Forms\Components\Repeater;
@@ -27,50 +28,53 @@ class AsChecklistForm
                                     ->default(now())
                                     ->required(),
 
-                Select::make('classroom_id')
-                    ->label('Kelas')
-                    ->options(Classroom::all()->pluck('name', 'id'))
-                    ->required()
-                    ->live() // WAJIB: Agar form merespon perubahan secara instan
-                    ->afterStateUpdated(function ($get, $set) {
-                        $classId = $get('classroom_id');
+                            Select::make('classroom_id')
+                                ->label('Kelas')
+                                ->options(Classroom::all()->pluck('name', 'id'))
+                                ->required()
+                                ->live() // WAJIB: Agar form merespon perubahan secara instan
+                                ->native(false)
+                                ->afterStateUpdated(function ($get, $set) {
+                                    $classId = $get('classroom_id');
 
-                        // Jika pilihan kelas dikosongkan, hapus isi repeater
-                        if (!$classId) {
-                            $set('assessments', []);
-                            return;
-                        }
+                                    // Jika pilihan kelas dikosongkan, hapus isi repeater
+                                    if (!$classId) {
+                                        $set('assessments', []);
+                                        return;
+                                    }
 
-                        // Ambil data kelas beserta siswanya
-                        $classroom = Classroom::with('students')->find($classId);
+                                    // Ambil data kelas beserta siswanya
+                                    $classroom = Classroom::with('students')->find($classId);
 
-                        if ($classroom) {
-                            // Mapping data siswa ke format yang dikenali oleh Repeater
-                            $studentData = $classroom->students->map(function ($student) {
-                                return [
-                                    'student_id'   => $student->id,
-                                    'student_name' => $student->name,
-                                    // Status TP akan kosong secara default sampai diisi guru
-                                ];
-                            })->toArray();
+                                    if ($classroom) {
+                                        // Mapping data siswa ke format yang dikenali oleh Repeater
+                                        $studentData = $classroom->students->map(function ($student) {
+                                            return [
+                                                'student_id'   => $student->id,
+                                                'student_name' => $student->name,
+                                                // Status TP akan kosong secara default sampai diisi guru
+                                            ];
+                                        })->toArray();
 
-                            // "Suntikkan" data ke dalam field repeater bernama 'assessments'
-                            $set('assessments', $studentData);
-                        }
-                    }),
+                                        // "Suntikkan" data ke dalam field repeater bernama 'assessments'
+                                        $set('assessments', $studentData);
+                                    }
+                                }),
 
                                 Select::make('semester')
                                     ->options([1 => 'Semester 1', 2 => 'Semester 2'])
                                     ->live()
+                                    ->native(false)
                                     ->required(),
 
                                 Select::make('week_number')
                                     ->label('Minggu Ke-')
                                     ->options(collect(range(1, 17))->mapWithKeys(fn ($i) => [$i => "Minggu {$i}"]))
                                     ->live()
+                                    ->native(false)
                                     ->required(),
                             ]),
-                    ]),
+                    ])->columnSpanFull(),
 
                 // Bagian Matrix Penilaian
                 Section::make('Matrix Penilaian Checklist')
@@ -79,6 +83,7 @@ class AsChecklistForm
                     ->schema([
                         // Kita gunakan Repeater untuk daftar Siswa
                         Repeater::make('assessments')
+                             ->itemNumbers()
                             ->label('Daftar Siswa')
                             ->addable(false) // Guru tidak bisa tambah baris manual
                             ->deletable(false)
@@ -94,14 +99,18 @@ class AsChecklistForm
                                 // 2. Siapkan input untuk setiap TP
                                 $tpInputs = [];
                                 foreach ($tps as $index => $tp) {
-                                    $tpInputs[] = Select::make("tp_{$tp->id}")
-                                        ->label("TP " . ($index + 1))
+                                    $tpInputs[] = Radio::make("tp_{$tp->id}")
+                                        ->label("TP " . ($index + 1) . ": " . $tp->description)
                                         ->options([
                                             'muncul' => 'Muncul',
                                             'tidak_muncul' => 'Belum Muncul',
                                             'perlu_bimbingan' => 'Perlu Bimbingan',
                                         ])
-                                        ->helperText($tp->description) // Menampilkan bunyi TP
+                                        // ->inline()
+                                        // ->helperText($tp->description) // Menampilkan bunyi TP
+                                            // ->aboveLabel([
+                                            //     'tp' => $tp->description
+                                            // ])
                                         ->columnSpan(1);
                                 }
 
@@ -117,7 +126,7 @@ class AsChecklistForm
                                         ]),
                                 ];
                             })
-                    ]),
+                    ])->columnSpanFull(),
             ]);
     }
 }
