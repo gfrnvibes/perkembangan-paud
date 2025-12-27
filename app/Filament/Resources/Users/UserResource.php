@@ -15,6 +15,7 @@ use Filament\Support\Icons\Heroicon;
 use Illuminate\Support\Facades\Auth;
 use Filament\Actions\BulkActionGroup;
 use Filament\Forms\Components\Select;
+use Filament\Schemas\Components\Icon;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Forms\Components\TextInput;
@@ -54,15 +55,27 @@ class UserResource extends Resource
                 // DateTimePicker::make('email_verified_at'),
                 TextInput::make('password')
                     ->password()
-                    ->required(),
+                    // ->required()
+                    ,
                 Select::make('roles')
                     ->relationship('roles', 'name')
                     ->multiple()
                     ->preload()
+                    ->visible(fn () => Auth::user()?->hasRole('super_admin'))
+                    ->default('parent' )
                     ->searchable(),
-                // Select::make('students.name')
-                //     ->relationship('students', 'name')
-                //     ->preload()
+                Select::make('children')
+                    ->label('Nama Anak')
+                    ->relationship('children', 'name')
+                    ->preload()
+                    ->multiple()
+                    ->native(false)
+                    ->afterLabel([
+                        Icon::make(Heroicon::ExclamationTriangle),
+                        'Mohon isi dengan teliti!'
+                    ])
+                    ->helperText('1 Ortu bisa saja memiliki lebih dari 1 anak.')
+                    ->visible(fn () => Auth::user()?->hasRole('teacher'))
             ]);
     }
 
@@ -70,12 +83,13 @@ class UserResource extends Resource
     {
         return $schema
             ->components([
-                TextEntry::make('name'),
+                TextEntry::make('name')
+                    ->label('Nama'),
                 TextEntry::make('email')
-                    ->label('Email address'),
-                TextEntry::make('roles.name')
-                    ->badge()
-                    ->placeholder('-'),
+                    ->label('Email'),
+                // TextEntry::make('roles.name')
+                //     ->badge()
+                //     ->placeholder('-'),
                 TextEntry::make('created_at')
                     ->dateTime()
                     ->placeholder('-'),
@@ -93,11 +107,20 @@ class UserResource extends Resource
                     ->searchable(),
                 TextColumn::make('email')
                     ->label('Email address')
+                    ->copyable()
+                    ->copyMessage('Email address copied')
+                    ->copyMessageDuration(1500)
                     ->searchable(),
+                TextColumn::make('children.name')
+                    ->label('Nama Anak')
+                    ->placeholder('Belum diatur')
+                    ->searchable()
+                    ->visible(fn () => Auth::user()?->hasRole('teacher'))
+                    ->bulleted(),
                 TextColumn::make('roles.name')
                     ->visible(fn () => ! auth()->user()?->hasRole('teacher'))
                     ->badge()
-                    ->placeholder('-'),
+                    ->placeholder('Belum diatur'),
                 TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()

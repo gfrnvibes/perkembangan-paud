@@ -47,6 +47,7 @@ class StudentResource extends Resource
                     ->required(),
                 TextInput::make('nisn')
                     ->label('NISN')
+                    ->numeric()
                     ->required(),
                 DatePicker::make('dob')
                     ->label('Tanggal Lahir')
@@ -61,9 +62,11 @@ class StudentResource extends Resource
                     ->required()
                     ->native(false),
                 Select::make('parents')
+                    ->label('Nama Orang Tua')
                     ->relationship('parents', 'name', fn (Builder $query) =>
                             $query->whereHas('roles', fn ($q) => $q->where('name', 'parent')))
                     ->preload()
+                    ->multiple()
                     ->native(false)
             ]);
     }
@@ -104,7 +107,8 @@ class StudentResource extends Resource
             ->recordActions([
                 ActionGroup::make([
                     ViewAction::make(),
-                    EditAction::make(),
+                    EditAction::make()
+                        ->modalHeading('Perbarui Data Siswa'),
                     DeleteAction::make(),
                     ForceDeleteAction::make(),
                     RestoreAction::make(),
