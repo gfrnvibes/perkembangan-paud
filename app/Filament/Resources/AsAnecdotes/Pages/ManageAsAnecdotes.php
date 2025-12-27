@@ -15,6 +15,7 @@ class ManageAsAnecdotes extends ManageRecords
     {
         return [
             CreateAction::make()
+                ->label('Tambah Anekdot')
                 ->modalHeading('Buat Catatan Anekdot Siswa'),
         ];
     }

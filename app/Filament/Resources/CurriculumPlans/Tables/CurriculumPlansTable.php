@@ -41,7 +41,8 @@ class CurriculumPlansTable
                     ->toggleable(isToggledHiddenByDefault: true),
 
                 TextColumn::make('week_number')
-                    ->label('Minggu')
+                    ->label('Minggu ke-')
+                    ->badge()
                     ->sortable()
                     ->formatStateUsing(fn ($state) => "M-{$state}"),
                 
@@ -63,7 +64,7 @@ class CurriculumPlansTable
                     ->expandableLimitedList(),
 
                 TextColumn::make('learningObjectives.description')
-                    ->label('TP')
+                    ->label('Tujuan Pembelajaran')
                     ->bulleted()
                     ->limitList(3)
                     ->searchable()

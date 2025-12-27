@@ -15,6 +15,7 @@ class ManageAsArtworks extends ManageRecords
     {
         return [
             CreateAction::make()
+                ->label('Tambah Hasil Karya')
                 ->modalHeading('Buat Hasil Karya Siswa'),
         ];
     }

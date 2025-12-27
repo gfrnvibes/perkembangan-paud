@@ -15,6 +15,7 @@ class ManageClassrooms extends ManageRecords
     {
         return [
             CreateAction::make()
+                ->label('Tambah Kelas')
                 ->modalHeading('Buat Ruang Kelas'),
         ];
     }

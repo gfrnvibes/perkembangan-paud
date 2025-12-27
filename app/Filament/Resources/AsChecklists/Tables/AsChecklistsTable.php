@@ -44,6 +44,7 @@ class AsChecklistsTable
                 TextColumn::make('learningObjective.curriculumPlan.semester')
                     ->label('SMT')
                     ->badge()
+                    ->color('danger')
                     ->toggleable(),
                 TextColumn::make('learningObjective.curriculumPlan.week_number')
                     ->label('Mingu ke')

@@ -16,6 +16,7 @@ class ManageStudents extends ManageRecords
     {
         return [
             CreateAction::make()
+                ->label('Tambah Siswa')
                 ->modalHeading('Buat Data Siswa Baru'),
         ];
     }

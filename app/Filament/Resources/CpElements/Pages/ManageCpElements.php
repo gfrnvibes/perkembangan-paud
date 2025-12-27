@@ -14,6 +14,7 @@ class ManageCpElements extends ManageRecords
     {
         return [
             CreateAction::make()
+                ->label('Tambah Element CP')
                 ->modalHeading('Buat Elemen CP'),
         ];
     }
