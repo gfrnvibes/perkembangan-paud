@@ -10,6 +10,8 @@ class ManageCpElements extends ManageRecords
 {
     protected static string $resource = CpElementResource::class;
 
+    protected ?string $heading = 'Element CP';
+
     protected function getHeaderActions(): array
     {
         return [

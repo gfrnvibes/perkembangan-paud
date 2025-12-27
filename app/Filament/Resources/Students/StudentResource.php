@@ -66,7 +66,7 @@ class StudentResource extends Resource
                     ->relationship('parents', 'name', fn (Builder $query) =>
                             $query->whereHas('roles', fn ($q) => $q->where('name', 'parent')))
                     ->preload()
-                    ->multiple()
+                    // ->multiple()
                     ->native(false)
             ]);
     }
@@ -97,6 +97,7 @@ class StudentResource extends Resource
                     ->label('Kelas')
                     ->sortable(),
                 TextColumn::make('parents.name')
+                    ->placeholder('Belum diatur')
                     ->label('Orang Tua'),
                 TextColumn::make('dob')
                     ->label('Tanggal Lahir'),
