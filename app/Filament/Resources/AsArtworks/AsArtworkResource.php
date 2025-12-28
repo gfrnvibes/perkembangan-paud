@@ -109,7 +109,7 @@ class AsArtworkResource extends Resource
                 SpatieMediaLibraryImageEntry::make('image')
                     ->label('Dokumentasi Hasil Karya')
                     ->collection('artwork_image')
-                    ->conversion('preview')
+                    // ->conversion('preview')
                     ->columnSpanFull()
             ]);
     }
@@ -158,7 +158,7 @@ class AsArtworkResource extends Resource
                     ->label('Dokumentasi')
                     ->placeholder('Tidak ada dokumentasi')
                     ->collection('artwork_image')
-                    ->conversion('preview')
+                    // ->conversion('preview')
                     ->stacked()
                     ->circular()
                     ->limit(3)

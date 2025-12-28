@@ -1,218 +1,136 @@
-<div class="container p-5">
-    <div class="card shadow-sm border-0">
-        <div class="card-header bg-white fw-semibold">
-            Catatan Anecdotal Anak
-        </div>
-
-        {{-- FILTER --}}
-        <div class="card-body ">
-            <div class="row g-3 align-items-end">
+<div class="container py-4">
+    <div class="card shadow-sm mb-4">
+        <div class="card-body">
+            <h5 class="card-title mb-3"><i class="fas fa-filter me-2"></i>Filter Perkembangan</h5>
+            <div class="row g-3">
                 <div class="col-md-3">
-                    <label class="form-label">Pilih Anak</label>
-                    <select class="form-select" wire:model.live="studentId">
-                        <option value="">Pilih Anak</option>
-
-                        @foreach ($this->children as $child)
-                            <option value="{{ $child->id }}">
-                                {{ $child->name }}
-                            </option>
+                    <label class="form-label small">Pilih Anak</label>
+                    <select wire:model.live="student_id" class="form-select">
+                        <option value="">Semua Anak</option>
+                        @foreach ($children as $child)
+                            <option value="{{ $child->id }}">{{ $child->name }}</option>
                         @endforeach
                     </select>
-
                 </div>
-
-                <div class="col-md-3">
-                    <label class="form-label">Tanggal</label>
-                    <input type="date" class="form-control" wire:model.live="date">
-                </div>
-
-                <div class="col-md-3">
-                    <div class="dropdown">
-                        <button class="btn btn-outline-secondary dropdown-toggle" type="button"
-                            data-bs-toggle="dropdown">
-                            Kolom
-                        </button>
-
-                        <ul class="dropdown-menu p-2" style="min-width: 220px">
-                            @foreach ($columns as $key => $visible)
-                                <li>
-                                    <div class="form-check">
-                                        <input class="form-check-input" type="checkbox" id="col-{{ $key }}"
-                                            wire:click="toggleColumn('{{ $key }}')"
-                                            @checked($visible)>
-                                        <label class="form-check-label" for="col-{{ $key }}">
-                                            {{ ucfirst($key) }}
-                                        </label>
-                                    </div>
-                                </li>
-                            @endforeach
-                        </ul>
-                    </div>
-
-                </div>
-
-
                 <div class="col-md-2">
-                    <button type="button" class="btn btn-outline-secondary w-100" wire:click="resetFilter">
-                        Reset Filter
+                    <label class="form-label small">Tanggal</label>
+                    <input type="date" wire:model.live="date" class="form-select">
+                </div>
+                {{-- Semester dan T.A. --}}
+                {{-- <div class="col-md-2">
+                    <label class="form-label small">Semester</label>
+                    <select wire:model.live="semester" class="form-select">
+                        <option value="">Pilih Semester</option>
+                        <option value="1">Semester 1</option>
+                        <option value="2">Semester 2</option>
+                    </select>
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label small">Tahun Ajaran</label>
+                    <select wire:model.live="academic_year_id" class="form-select">
+                        <option value="">Pilih Tahun</option>
+                        @foreach ($academicYears as $year)
+                            <option value="{{ $year->id }}">{{ $year->year_range }}</option>
+                        @endforeach
+                    </select>
+                </div> --}}
+                <div class="col-md-2 d-flex align-items-end">
+                    <button wire:click="resetFilters" class="btn btn-outline-secondary w-100">
+                        <i class="fas fa-undo me-1"></i> Reset
                     </button>
-
                 </div>
-            </div>
-        </div>
-
-        @if ($this->selectedChild)
-            <div class="card-body border-bottom bg-light-subtle">
-                <div class="row g-3">
-                    <div class="col-md-3">
-                        <div class="text-muted small">Nama</div>
-                        <div class="fw-semibold">{{ $this->selectedChild->name }}</div>
-                    </div>
-
-                    <div class="col-md-3">
-                        <div class="text-muted small">NISN</div>
-                        <div class="fw-semibold">{{ $this->selectedChild->nisn ?? '-' }}</div>
-                    </div>
-
-                    <div class="col-md-3">
-                        <div class="text-muted small">Tanggal Lahir</div>
-                        <div class="fw-semibold">
-                            {{ optional($this->selectedChild->dob)->format('d M Y') ?? '-' }}
-                        </div>
-                    </div>
-
-                    <div class="col-md-3">
-                        <div class="text-muted small">Jenis Kelamin</div>
-                        <div class="fw-semibold">
-                            {{ $this->selectedChild->gender === 'L' ? 'Laki-laki' : 'Perempuan' }}
-                        </div>
-                    </div>
-                </div>
-            </div>
-        @endif
-
-
-        {{-- TABLE --}}
-        <div class="container mt-3">
-            <div class="table-responsive">
-                <table class="table table-bordered">
-                    {{-- <thead class="table-light">
-                        <tr>
-                            @if ($columns['child'])
-                                <th>Anak</th>
-                            @endif
-                            @if ($columns['date'])
-                                <th>Tanggal</th>
-                            @endif
-                            @if ($columns['time'])
-                                <th>Waktu</th>
-                            @endif
-                            @if ($columns['location'])
-                                <th>Lokasi</th>
-                            @endif
-                            @if ($columns['description'])
-                                <th>Deskripsi</th>
-                            @endif
-                            @if ($columns['cp'])
-                                <th>CP Element</th>
-                            @endif
-                            @if ($columns['analysis'])
-                                <th>Analisis Guru</th>
-                            @endif
-                            <th>Dokumentasi</th>
-                        </tr>
-                    </thead> --}}
-
-                    <tbody>
-                        @forelse ($anecdotes as $item)
-                            <tr>
-                                @if ($columns['child'])
-                                    <td class="fw-semibold text-danger" colspan="4">{{ $item->student->name }}</td>
-                                @endif
-
-                                @if ($columns['date'])
-                                    <td> Tanggal: {{ $item->created_at->format('d/m/Y') }}</td>
-                                @endif
-
-                                @if ($columns['time'])
-                                    <td colspan="2">Waktu: {{ \Carbon\Carbon::parse($item->time)->format('H:i') }} WIB</td>
-                                @endif
-
-                            </tr>
-                            <tr>
-                                @if ($columns['location'])
-                                    <td>Lokasi: {{ $item->location }}</td>
-                                @endif
-
-
-                                @if ($columns['cp'])
-                                    <td colspan="2"> Elemen CP:
-                                        @foreach ($item->cpElements as $cp)
-                                            <span
-                                                class="badge bg-success-subtle text-dark border mb-1 d-inline-block">
-                                                {{ $cp->name }}
-                                            </span>
-                                        @endforeach
-                                    </td>
-                                @endif
-                            </tr>
-                            <tr>
-                                @if ($columns['description'])
-                                    <th class="text-bg-secondary text-center">Deskripsi</th>
-                                @endif
-                                @if ($columns['analysis'])
-                                    <th class="text-bg-secondary text-center">Analisis Guru</th>
-                                @endif
-                                <th class="text-bg-secondary text-center">Dokumentasi</th>
-                            </tr>
-                            <tr>
-
-                                @if ($columns['description'])
-                                    <td class="text-wrap" style="max-width: 250px">
-                                        {{ $item->description }}
-                                    </td>
-                                @endif
-
-                                @if ($columns['analysis'])
-                                    <td class="text-wrap" style="max-width: 250px">
-                                        {{ $item->teacher_analysis ?? '-' }}
-                                    </td>
-                                @endif
-                                <td class="">
-
-                                    @php
-                                        $gambars = $item->getMedia('anecdote_image');
-                                    @endphp
-
-                                    @if ($gambars)
-                                        <div class="d-flex flex-column gap-2 align-items-center">
-                                            @foreach ($gambars as $gambar)
-                                                <img src="{{ route('media.show', $gambar) }}" alt="Dokumentasi"
-                                                    class="rounded border"
-                                                    style="width: 200px; height: 200px; object-fit: cover; cursor: pointer">
-                                            @endforeach
-                                        </div>
-                                    @else
-                                        <span class="text-muted fst-italic">
-                                            Tidak ada Dokumentasi
-                                        </span>
-                                    @endif
-                                </td>
-
-                            </tr>
-
-                        @empty
-                            <tr>
-                                <td colspan="7" class="text-center text-muted py-4">
-                                    Belum ada Data.
-                                </td>
-                            </tr>
-                        @endforelse
-                    </tbody>
-                </table>
             </div>
         </div>
     </div>
 
+    @forelse($assessmentGroups as $childId => $anecdotes)
+        @php $student = $anecdotes->first()->student; @endphp
 
+        <div class="card shadow-sm mb-5">
+            <div class="card-header bg-primary text-white py-3">
+                <div class="row align-items-center">
+                    <div class="col-md-4">
+                        <h6 class="mb-0">NAMA SISWA:
+                            <strong>{{ strtoupper($student->name) }}</strong>
+                        </h6>
+                    </div>
+                    <div class="col-md-4">
+                        <h6 class="mb-0">NISN: <strong>{{ $student->nisn ?? '-' }}</strong></h6>
+                    </div>
+                    <div class="col-md-4 text-md-end">
+                        <span class="small opacity-75 d-block">Kelas</span>
+                        <span class="fw-bold">
+                            {{ $student->classroom->first()->name ?? 'Belum Ada Kelas' }}
+                        </span>
+                    </div>
+                </div>
+            </div>
+            <div class="table-responsive">
+                <table class="table table-bordered align-middle mb-0">
+                    {{-- <thead class="table-light text-center">
+                        <tr>
+                            <th width="140">Tanggal</th>
+                            <th width="100">Waktu</th>
+                            <th>Lokasi</th>
+                            <th>Elemen CP</th>
+                            <th>Deskripsi</th>
+                            <th>Analisis Guru</th>
+                            <th>Dokumentasi</th>
+                        </tr>
+                    </thead> --}}
+                    <tbody>
+                        @foreach ($anecdotes as $item)
+                            <tr>
+                                <td class="">Tanggal: {{ optional($item->created_at)->format('d/m/Y') }}
+                                </td>
+                                <td class="" colspan="3">Waktu: 
+                                    {{ \Carbon\Carbon::parse($item->time)->format('H:i') ?? '-' }}
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Lokasi: {{ $item->location ?? '-' }}</td>
+                                <td colspan="3">Elemen CP: 
+                                    @foreach ($item->cpElements as $cp)
+                                        <span
+                                            class="badge bg-success-subtle text-dark border mb-1 d-inline-block">{{ $cp->name }}</span>
+                                    @endforeach
+                                </td>
+                            </tr>
+                            <tr class="text-center">
+                                <th class="text-bg-secondary">Deskripsi</th>
+                                <th class="text-bg-secondary">Analisis Guru</th>
+                                <th class="text-bg-secondary">Dokumentasi</th>
+                            </tr>
+                            <tr>
+                                <td style="max-width:300px">{{ $item->description }}</td>
+                                <td style="max-width:300px">{{ $item->teacher_analysis ?? '-' }}
+                                </td>
+                                <td>
+                                    @php $gambars = $item->getMedia('anecdote_image'); @endphp
+                                    @if ($gambars->isNotEmpty())
+                                        <div class="d-flex flex-column align-items-center gap-2">
+                                            @foreach ($gambars as $gambar)
+                                                <img src="{{ route('media.show', $gambar) }}" alt="Dokumentasi"
+                                                    class="rounded border"
+                                                    style="width: 240px; height: 200px; object-fit: cover; cursor: pointer">
+                                            @endforeach
+                                        </div>
+                                    @else
+                                        <span class="text-muted fst-italic">Tidak ada
+                                            Dokumentasi</span>
+                                    @endif
+                                </td>
+                            </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    @empty
+        <div class="alert alert-info text-center py-5 shadow-sm">
+            <i class="fas fa-clipboard-list fa-3x mb-3 d-block"></i>
+            <h5>Belum ada data penilaian tersedia.</h5>
+            <p class="text-muted">Data akan muncul setelah guru menginput penilaian.</p>
+        </div>
+    @endforelse
 </div>

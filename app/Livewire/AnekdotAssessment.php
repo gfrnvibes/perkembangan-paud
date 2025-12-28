@@ -7,31 +7,17 @@ use Livewire\Attributes\Title;
 use Livewire\Attributes\Layout;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Assessment\AsAnecdote;
+use App\Models\Master\AcademicYear;
 
 #[Title('Anekdot - RA Nurul Amin')]
 #[Layout('components.layouts.app')]
 class AnekdotAssessment extends Component
 {
-    // public $children = [];
-    public $studentId = '';
-    public $date = '';
-
-    public array $columns = [
-        'child' => false,
-        'date' => true,
-        'time' => true, // default HIDDEN
-        'location' => true,
-        'description' => true,
-        'cp' => true,
-        'analysis' => true,
-    ];
-
-    public function toggleColumn(string $key): void
-    {
-        if (array_key_exists($key, $this->columns)) {
-            $this->columns[$key] = !$this->columns[$key];
-        }
-    }
+    public $student_id;
+    public $date;
+    public $semester;
+    public $academic_year_id;
+    public $status;
 
     public function mount()
     {
@@ -39,12 +25,71 @@ class AnekdotAssessment extends Component
 
         abort_unless($user->hasRole('parent'), 403);
 
-        $this->children = $user->children()->get();
+        $childIds = $user->children()->pluck('id');
+        if ($childIds->isNotEmpty()) {
+            $latest = AsAnecdote::whereIn('student_id', $childIds)->latest('date')->first();
+
+            if ($latest) {
+                $this->student_id = $latest->student_id;
+                $this->date = $latest->date;
+            }
+        }
     }
 
     public function getChildrenProperty()
     {
-        return Auth::user()->children()->select('id', 'name', 'nisn', 'dob', 'gender')->get();
+        return Auth::user()->children()->select('id', 'name', 'nisn')->get();
+    }
+
+    public function getAcademicYearsProperty()
+    {
+        return AcademicYear::all();
+    }
+
+    public function getAssessmentDataProperty()
+    {
+        $childIds = $this->children->pluck('id');
+
+        if ($childIds->isEmpty()) {
+            return collect();
+        }
+
+        $query = AsAnecdote::query()
+            ->with(['media', 'student', 'cpElements'])
+            ->whereIn('student_id', $childIds);
+
+        if ($this->student_id) {
+            $query->where('student_id', $this->student_id);
+        }
+
+        if ($this->date) {
+            $query->whereDate('date', $this->date);
+        }
+
+        if ($this->semester || $this->academic_year_id) {
+            $query->whereHas('cpElements.curriculumPlan', function ($q) {
+                if ($this->semester) {
+                    $q->where('semester', $this->semester);
+                }
+                if ($this->academic_year_id) {
+                    $q->where('academic_year_id', $this->academic_year_id);
+                }
+            });
+        }
+
+        if (!$this->date && !$this->semester && !$this->status) {
+            $latestDate = (clone $query)->latest('date')->value('date');
+            if ($latestDate) {
+                $query->whereDate('date', $latestDate);
+            }
+        }
+
+        return $query->latest('date')->get()->groupBy('student_id');
+    }
+
+    public function resetFilters()
+    {
+        $this->reset(['student_id', 'date', 'semester', 'academic_year_id', 'status']);
     }
 
     public function getSelectedChildProperty()
@@ -68,28 +113,10 @@ class AnekdotAssessment extends Component
 
     public function render()
     {
-        $user = Auth::user();
-
-        $anecdotes = AsAnecdote::with('media')
-            ->whereHas('student', function ($q) use ($user) {
-                $q->where('user_id', $user->id);
-
-                // kalau anak dipilih → filter anak
-                if ($this->studentId) {
-                    $q->where('id', $this->studentId);
-                }
-            })
-            ->when($this->date, fn($q) => $q->whereDate('date', $this->date))
-            ->with(['student', 'cpElements'])
-            ->latest('date')
-            ->when(
-                empty($this->studentId),
-                fn($q) => $q->limit(1), // 🔥 hanya 1 data terakhir
-            )
-            ->get();
-
         return view('livewire.anekdot-assessment', [
-            'anecdotes' => $anecdotes,
+            'children' => $this->children,
+            'academicYears' => $this->academicYears,
+            'assessmentGroups' => $this->assessmentData,
         ]);
     }
 }
