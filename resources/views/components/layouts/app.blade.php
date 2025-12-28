@@ -53,7 +53,7 @@
                         Bersama mendampingi tumbuh kembang Ananda dengan cinta, perhatian, dan kegembiraan.
                     </p>
                     <p class="mb-0 small">
-                        <i class="bi bi-geo-alt-fill"></i> Jl. Pendidikan No. 45, Kota Bahagia
+                        <i class="bi bi-geo-alt-fill"></i> 
                     </p>
                 </div>
 
