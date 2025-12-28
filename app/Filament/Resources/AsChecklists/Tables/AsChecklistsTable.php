@@ -59,7 +59,7 @@ class AsChecklistsTable
                     ->searchable(),
                 TextColumn::make('learningObjective.description')
                     ->label('Tujuan Pembelajaran (TP)')
-                    ->limit(20)
+                    ->limit(100)
                     ->tooltip(function (TextColumn $column): ?string {
                         $state = $column->getState();
 

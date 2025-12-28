@@ -77,8 +77,12 @@ class AsArtworkResource extends Resource
                     ->required(),
                 SpatieMediaLibraryFileUpload::make('image')
                     ->label('Dokumentasi')
+                    ->collection('artwork_image')
+                    ->disk('local')
                     ->multiple()
                     ->image()
+                    ->conversion('preview')
+                    ->conversionsDisk('local')
             ]);
     }
 
@@ -103,7 +107,9 @@ class AsArtworkResource extends Resource
                     ->badge()
                     ->bulleted(),
                 SpatieMediaLibraryImageEntry::make('image')
-                    ->label('Dokumentasi')
+                    ->label('Dokumentasi Hasil Karya')
+                    ->collection('artwork_image')
+                    ->conversion('preview')
                     ->columnSpanFull()
             ]);
     }
@@ -150,6 +156,9 @@ class AsArtworkResource extends Resource
                     ->bulleted(),
                 SpatieMediaLibraryImageColumn::make('image')
                     ->label('Dokumentasi')
+                    ->placeholder('Tidak ada dokumentasi')
+                    ->collection('artwork_image')
+                    ->conversion('preview')
                     ->stacked()
                     ->circular()
                     ->limit(3)

@@ -92,8 +92,12 @@ class AsAnecdoteResource extends Resource
                     ->required(),
                 SpatieMediaLibraryFileUpload::make('image')
                     ->label('Dokumentasi')
+                    ->collection('anecdote_image')
+                    ->disk('local')
                     ->multiple()
                     ->image()
+                    ->conversion('preview')
+                    ->conversionsDisk('local')
             ]);
     }
 
@@ -123,6 +127,8 @@ class AsAnecdoteResource extends Resource
                     ->bulleted(),
                 SpatieMediaLibraryImageEntry::make('image')
                     ->label('Dokumentasi')
+                    ->collection('anecdote_image')
+                    ->conversion('preview')
                     ->columnSpanFull()
             ]);
     }
@@ -145,7 +151,7 @@ class AsAnecdoteResource extends Resource
                     ->toggleable(),
                 TextColumn::make('description')
                     ->label('Deskripsi')
-                    ->limit(20)
+                    ->limit(40)
                     ->tooltip(function (TextColumn $column): ?string {
                         $state = $column->getState();
 
@@ -176,6 +182,8 @@ class AsAnecdoteResource extends Resource
                 SpatieMediaLibraryImageColumn::make('image')
                     ->label('Dokumentasi')
                     ->placeholder('Tidak ada dokumentasi')
+                    ->collection('anecdote_image')
+                    ->conversion('preview')
                     ->stacked()
                     ->circular()
                     ->limit(3)

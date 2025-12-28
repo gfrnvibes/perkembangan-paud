@@ -13,6 +13,11 @@ class EditCurriculumPlan extends EditRecord
 {
     protected static string $resource = CurriculumPlanResource::class;
 
+        public function getHeading(): string
+    {
+        return 'Buat RPP';
+    }
+
     protected function getHeaderActions(): array
     {
         return [

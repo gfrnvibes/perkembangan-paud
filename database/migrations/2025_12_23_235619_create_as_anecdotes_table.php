@@ -14,12 +14,12 @@ return new class extends Migration
         Schema::create('as_anecdotes', function (Blueprint $table) {
             $table->id();
             $table->foreignId('student_id')->constrained();
-    $table->date('date');
-    $table->time('time');
-    $table->string('location');
-    $table->text('description');
-    $table->text('teacher_analysis')->nullable(); // Target AI Generate
-    $table->softDeletes();
+            $table->date('date');
+            $table->time('time');
+            $table->string('location');
+            $table->text('description');
+            $table->text('teacher_analysis')->nullable(); // Target AI Generate
+            $table->softDeletes();
             $table->timestamps();
         });
     }

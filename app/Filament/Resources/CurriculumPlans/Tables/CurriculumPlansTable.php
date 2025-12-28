@@ -53,8 +53,7 @@ class CurriculumPlansTable
 
                 TextColumn::make('theme')
                     ->label('Tema')
-                    ->searchable()
-                    ->wrap(),
+                    ->searchable(),
 
                 TextColumn::make('topics.name')
                     ->label('Topik')

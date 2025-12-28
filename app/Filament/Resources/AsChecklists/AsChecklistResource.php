@@ -57,7 +57,7 @@ class AsChecklistResource extends Resource
             'index' => ListAsChecklists::route('/'),
             'create' => CreateAsChecklist::route('/create'),
             'view' => ViewAsChecklist::route('/{record}'),
-            'edit' => EditAsChecklist::route('/{record}/edit'),
+            // 'edit' => EditAsChecklist::route('/{record}/edit'),
         ];
     }
 

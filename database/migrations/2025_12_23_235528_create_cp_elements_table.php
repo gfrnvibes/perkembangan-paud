@@ -14,8 +14,8 @@ return new class extends Migration
         Schema::create('cp_elements', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-    $table->text('description')->nullable();
-    $table->softDeletes();
+            $table->text('description')->nullable();
+            $table->softDeletes();
             $table->timestamps();
         });
     }

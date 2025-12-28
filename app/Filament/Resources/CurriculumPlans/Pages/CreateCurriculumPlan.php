@@ -9,7 +9,7 @@ class CreateCurriculumPlan extends CreateRecord
 {
     protected static string $resource = CurriculumPlanResource::class;
 
-        public function getHeading(): string
+    public function getHeading(): string
     {
         return 'Buat RPP';
     }

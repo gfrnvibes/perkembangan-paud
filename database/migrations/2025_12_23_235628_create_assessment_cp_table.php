@@ -12,8 +12,8 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('assessment_cp', function (Blueprint $table) {
-$table->foreignId('cp_element_id')->constrained();
-    $table->morphs('assessable'); // Menciptakan assessable_id dan assessable_type
+            $table->foreignId('cp_element_id')->constrained();
+            $table->morphs('assessable'); // Menciptakan assessable_id dan assessable_type
         });
     }
 

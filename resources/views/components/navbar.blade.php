@@ -13,9 +13,13 @@
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav mx-auto mb-2 mb-lg-0 gap-2">
                 <x-nav-link :active="request()->routeIs('/')" href="{{ route('/') }}">Home</x-nav-link>
-                {{-- <x-nav-link :active="request()->routeIs('/')" href="{{ route('/') }}"> Jejak Ananda</x-nav-link>
-                <x-nav-link :active="request()->routeIs('/')" href="{{ route('/') }}">Profil Ananda</x-nav-link> --}}
-            </ul>
+
+                @if (Auth::check() && auth()->user()->hasRole('parent'))                    
+                    <x-nav-link :active="request()->routeIs('cheklist')" href="{{ route('cheklist') }}">Cheklist</x-nav-link>
+                    <x-nav-link :active="request()->routeIs('anekdot')" href="{{ route('anekdot') }}">Anekdot</x-nav-link>
+                    <x-nav-link :active="request()->routeIs('artwork')" href="{{ route('artwork') }}">Hasil Karya</x-nav-link>
+                @endif
+            </ul>   
             <div class="d-flex gap-2">
                 @guest
                     <a href="{{ route('login') }}" class="btn btn-light fw-bold text-danger">Login</a>
