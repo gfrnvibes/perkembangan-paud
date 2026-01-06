@@ -14,7 +14,7 @@ class ListCurriculumPlans extends ListRecords
     {
         return [
             CreateAction::make()
-                ->label('Buat RPP'),
+                ->label('Tambah'),
         ];
     }
 }

@@ -25,7 +25,7 @@ class AnekdotAssessment extends Component
 
         abort_unless($user->hasRole('parent'), 403);
 
-        $childIds = $user->children()->pluck('id');
+        $childIds = Auth::user()->children()->pluck('students.id');
         if ($childIds->isNotEmpty()) {
             $latest = AsAnecdote::whereIn('student_id', $childIds)->latest('date')->first();
 
@@ -38,7 +38,7 @@ class AnekdotAssessment extends Component
 
     public function getChildrenProperty()
     {
-        return Auth::user()->children()->select('id', 'name', 'nisn')->get();
+        return Auth::user()->children()->select('students.id', 'students.name', 'students.nisn')->get();
     }
 
     public function getAcademicYearsProperty()

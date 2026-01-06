@@ -64,7 +64,7 @@ class AdminPanelProvider extends PanelProvider
                 BlockParentFromAdmin::class
             ])
             ->brandLogo(asset('images/paud.png'))
-            ->brandLogoHeight('2rem')
+            ->brandLogoHeight('2.5rem')
             ->brandName('RA Nurul Amin')
             ->favicon(asset('images/paud.png'))
             ->plugins([

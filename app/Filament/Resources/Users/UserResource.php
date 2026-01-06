@@ -6,20 +6,30 @@ use UnitEnum;
 use BackedEnum;
 use App\Models\User;
 use Filament\Tables\Table;
+use Illuminate\Support\Arr;
 use Filament\Schemas\Schema;
 use Filament\Actions\EditAction;
 use Filament\Actions\ViewAction;
 use Filament\Resources\Resource;
+use Filament\Actions\ActionGroup;
 use Filament\Actions\DeleteAction;
+use Filament\Actions\RestoreAction;
 use Filament\Support\Icons\Heroicon;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 use Filament\Actions\BulkActionGroup;
 use Filament\Forms\Components\Select;
+use Filament\Schemas\Components\Grid;
 use Filament\Schemas\Components\Icon;
 use Filament\Actions\DeleteBulkAction;
+use Filament\Actions\ForceDeleteAction;
+use Filament\Actions\RestoreBulkAction;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Forms\Components\TextInput;
+use Filament\Schemas\Components\Section;
 use Illuminate\Database\Eloquent\Builder;
+use Filament\Tables\Filters\TrashedFilter;
+use Filament\Actions\ForceDeleteBulkAction;
 use Filament\Infolists\Components\TextEntry;
 use Filament\Forms\Components\DateTimePicker;
 use App\Filament\Resources\Users\Pages\ManageUsers;
@@ -46,36 +56,61 @@ class UserResource extends Resource
     {
         return $schema
             ->components([
-                TextInput::make('name')
-                    ->required(),
-                TextInput::make('email')
-                    ->label('Email address')
-                    ->email()
-                    ->required(),
-                // DateTimePicker::make('email_verified_at'),
-                TextInput::make('password')
-                    ->password()
-                    // ->required()
-                    ,
-                Select::make('roles')
-                    ->relationship('roles', 'name')
-                    ->multiple()
-                    ->preload()
-                    ->visible(fn () => Auth::user()?->hasRole('super_admin'))
-                    ->default('parent' )
-                    ->searchable(),
-                Select::make('children')
-                    ->label('Nama Anak')
-                    ->relationship('children', 'name')
-                    ->preload()
-                    ->multiple()
-                    ->native(false)
-                    ->afterLabel([
-                        Icon::make(Heroicon::ExclamationTriangle),
-                        'Mohon isi dengan teliti!'
-                    ])
-                    ->helperText('1 Ortu bisa saja memiliki lebih dari 1 anak.')
-                    ->visible(fn () => Auth::user()?->hasRole('teacher'))
+                    Section::make('Data Akun')
+                        ->description('Informasi untuk login')
+                        ->schema([
+                            Grid::make(1) // force atas-bawah
+                                ->schema([
+                                    TextInput::make('name')
+                                        ->label('Nama')
+                                        ->required(),
+
+                                    TextInput::make('email')
+                                        ->label('Email address')
+                                        ->email()
+                                        ->required(),
+
+                                    TextInput::make('password')
+                                        ->password()
+                                        ->label('Password')
+                                        ->required(fn (string $operation) => $operation === 'create')
+                                        ->dehydrated(fn ($state) => filled($state))
+                                        ->dehydrateStateUsing(fn ($state) => Hash::make($state)),
+                                    
+                                    Select::make('roles')
+                                        ->relationship('roles', 'name')
+                                        ->multiple()
+                                        ->preload()
+                                        ->searchable()
+                                        ->default('parent')
+                                        ->visible(fn () => Auth::user()?->hasRole('super_admin')),
+                                ]),
+                        ]),
+
+                    Section::make('Data Tambahan')
+                        ->description('Data personal & relasi')
+                        ->schema([
+                            Grid::make(1) // juga atas-bawah
+                                ->schema([
+                                    TextInput::make('phone')
+                                        ->label('No. Telepon')
+                                        ->numeric()
+                                        ->required(),
+
+                                    TextInput::make('address')
+                                        ->label('Alamat')
+                                        ->required(),
+
+                                    Select::make('children')
+                                        ->label('Nama Anak')
+                                        ->relationship('children', 'name')
+                                        ->multiple()
+                                        ->preload()
+                                        ->native(false)
+                                        ->helperText('1 Ortu bisa memiliki lebih dari 1 anak.')
+                                        ->visible(fn () => Auth::user()?->hasRole('teacher')),
+                                ]),
+                        ]),
             ]);
     }
 
@@ -103,24 +138,45 @@ class UserResource extends Resource
     {
         return $table
             ->columns([
+                TextColumn::make('roles.name')
+                    ->visible(fn () => ! auth()->user()?->hasRole('teacher'))
+                    ->badge()
+                    ->color(fn ($state) => match ($state) {
+                        'super_admin' => 'danger', 
+                        'teacher'     => 'warning',
+                        'parent'      => 'success',
+                        default       => 'gray',
+                    })
+                    ->placeholder('Belum diatur'),
                 TextColumn::make('name')
+                    ->label('Nama')
                     ->searchable(),
                 TextColumn::make('email')
                     ->label('Email address')
                     ->copyable()
-                    ->copyMessage('Email address copied')
+                    ->copyMessage('Email disalin')
+                    ->copyMessageDuration(1500)
+                    ->searchable(),
+                TextColumn::make('phone')
+                    ->label('No. Telepon')
+                    ->copyable()
+                    ->copyMessage('No. Telepon disalin')
+                    ->placeholder('Belum diatur')
                     ->copyMessageDuration(1500)
                     ->searchable(),
                 TextColumn::make('children.name')
-                    ->label('Nama Anak')
+                    ->label('Anak')
                     ->placeholder('Belum diatur')
                     ->searchable()
                     ->visible(fn () => Auth::user()?->hasRole('teacher'))
                     ->bulleted(),
-                TextColumn::make('roles.name')
-                    ->visible(fn () => ! auth()->user()?->hasRole('teacher'))
-                    ->badge()
-                    ->placeholder('Belum diatur'),
+                TextColumn::make('address')
+                    ->label('Alamat')
+                    ->copyable()
+                    ->copyMessage('Alamat disalin')
+                    ->copyMessageDuration(1500)
+                    ->placeholder('Belum diatur')
+                    ->searchable(),
                 TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()
@@ -131,16 +187,22 @@ class UserResource extends Resource
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
-                //
+                TrashedFilter::make(),
             ])
             ->recordActions([
-                ViewAction::make(),
-                EditAction::make(),
-                DeleteAction::make(),
+                ForceDeleteAction::make(),
+                RestoreAction::make(),
+                ActionGroup::make([
+                    ViewAction::make(),
+                    EditAction::make(),
+                    DeleteAction::make(),
+                ]),
             ])
             ->toolbarActions([
                 BulkActionGroup::make([
                     DeleteBulkAction::make(),
+                    ForceDeleteBulkAction::make(),
+                    RestoreBulkAction::make(),
                 ]),
             ]);
     }

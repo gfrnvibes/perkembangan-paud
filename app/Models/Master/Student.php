@@ -12,12 +12,18 @@ class Student extends Model
 
     protected $fillable = ['name', 'nisn', 'dob', 'gender'];
 
+    // public function parents()
+    // {
+    //     return $this->belongsTo(User::class, 'student_parent');
+    // }
+
     public function parents()
     {
-        return $this->belongsTo(User::class, 'user_id');
+        return $this->belongsToMany(User::class, 'student_parent', 'student_id', 'user_id');
     }
 
-    public function classroom()
+
+    public function classrooms()
     {
         return $this->belongsToMany(Classroom::class, 'classroom_student');
     }

@@ -57,7 +57,7 @@
                     <div class="col-md-4 text-md-end">
                         <span class="small opacity-75 d-block">Kelas</span>
                         <span class="fw-bold">
-                            {{ $student->classroom->first()->name ?? 'Belum Ada Kelas' }}
+                            {{ $student->classrooms->first()->name ?? 'Belum Ada Kelas' }}
                         </span>
                     </div>
                 </div>

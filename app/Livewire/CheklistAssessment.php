@@ -22,7 +22,9 @@ class CheklistAssessment extends Component
     public function mount()
     {
         // Menggunakan relasi children() terbaru
-        $childIds = Auth::user()->children()->pluck('id');
+        $childIds = Auth::user()
+            ->children()
+            ->pluck('students.id');
 
         if ($childIds->isNotEmpty()) {
             $latest = AsChecklist::whereIn('student_id', $childIds)->latest('date')->first();
@@ -61,7 +63,7 @@ class CheklistAssessment extends Component
         // app/Livewire/Parent/ChecklistHistory.php
 
         $query = AsChecklist::query()
-            ->with(['learningObjective.curriculumPlan', 'student.classroom']) // Sesuaikan di sini
+            ->with(['learningObjective.curriculumPlan', 'student.classrooms']) // Sesuaikan di sini
             ->whereIn('student_id', $childIds);
 
         // Filter dinamis

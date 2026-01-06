@@ -90,8 +90,7 @@ class AsChecklistsTable
                     }),
             ])
             ->filters([
-                TrashedFilter::make()
-                    ->native(false),
+                TrashedFilter::make(),
                 Filter::make('advance')
                     ->schema([
                         Select::make('status')

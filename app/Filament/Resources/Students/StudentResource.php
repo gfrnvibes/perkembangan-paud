@@ -26,6 +26,7 @@ use Filament\Forms\Components\DatePicker;
 use Illuminate\Database\Eloquent\Builder;
 use Filament\Tables\Filters\TrashedFilter;
 use Filament\Actions\ForceDeleteBulkAction;
+use Filament\Infolists\Components\TextEntry;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use App\Filament\Resources\Students\Pages\ManageStudents;
 
@@ -49,6 +50,13 @@ class StudentResource extends Resource
                     ->label('NISN')
                     ->numeric()
                     ->required(),
+                Select::make('gender')
+                    ->label('Jenis Kelamin')
+                    ->options([
+                        'L' => 'Laki-laki',
+                        'P' => 'Perempuan',
+                    ])
+                    ->native(false),
                 DatePicker::make('dob')
                     ->label('Tanggal Lahir')
                     ->required()
@@ -56,18 +64,33 @@ class StudentResource extends Resource
                     ->displayFormat('d/m/Y'),
                 Select::make('classrooms')
                     ->label('Kelas')
+                    ->createOptionForm([
+                        Select::make('academic_year_id')
+                            ->relationship('academicYear', 'year_range')
+                            ->required()
+                            ->label('Tahun Ajaran')
+                            ->createOptionForm([
+                                TextInput::make('year_range')
+                                    ->label('Tahun Ajaran')
+                                    ->required(),
+                            ])
+                            ->native(false),
+                        TextInput::make('name')
+                            ->label('Nama Kelas')
+                            ->required(),
+                    ])
                     ->relationship('classrooms', 'name')
                     ->preload()
                     ->multiple()
                     ->required()
                     ->native(false),
-                Select::make('parents')
-                    ->label('Nama Orang Tua')
-                    ->relationship('parents', 'name', fn (Builder $query) =>
-                            $query->whereHas('roles', fn ($q) => $q->where('name', 'parent')))
-                    ->preload()
-                    // ->multiple()
-                    ->native(false)
+                // Select::make('parents')
+                //     ->label('Nama Orang Tua')
+                //     ->relationship('parents', 'name', fn (Builder $query) =>
+                //             $query->whereHas('roles', fn ($q) => $q->where('name', 'parent')))
+                //     ->preload()
+                //     // ->multiple()
+                //     ->native(false)
             ]);
     }
 
@@ -75,12 +98,18 @@ class StudentResource extends Resource
     {
         return $schema
             ->components([
-                TextInput::make('name')
+                TextEntry::make('name')
                     ->label('Nama Siswa'),
-                TextInput::make('nisn')
+                TextEntry::make('nisn')
                     ->label('NISN'),
-                TextInput::make('dob')
+                TextEntry::make('dob')
                     ->label('Tanggal Lahir'),
+                TextEntry::make('gender')
+                    ->label('Jenis Kelamin'),
+                TextEntry::make('classrooms.name')
+                    ->label('Kelas'),
+                TextEntry::make('parents.name')
+                    ->label('Orang Tua'),
             ]);
     }
 
@@ -93,21 +122,27 @@ class StudentResource extends Resource
                 TextColumn::make('name')
                     ->label('Nama Siswa')
                     ->searchable(),
+                TextColumn::make('gender')
+                    ->label('Gender')
+                    ->badge()
+                    ->sortable(),
                 TextColumn::make('classrooms.name')
                     ->label('Kelas')
+                    ->badge()
                     ->sortable(),
+                TextColumn::make('dob')
+                    ->label('Tanggal Lahir'),
                 TextColumn::make('parents.name')
                     ->placeholder('Belum diatur')
                     ->label('Orang Tua'),
-                TextColumn::make('dob')
-                    ->label('Tanggal Lahir'),
             ])
             ->filters([
-                // TrashedFilter::make(),
+                TrashedFilter::make(),
             ])
             ->recordActions([
                 ActionGroup::make([
-                    ViewAction::make(),
+                    ViewAction::make()
+                        ->modalHeading('Lihat Data Siswa'),
                     EditAction::make()
                         ->modalHeading('Perbarui Data Siswa'),
                     DeleteAction::make(),

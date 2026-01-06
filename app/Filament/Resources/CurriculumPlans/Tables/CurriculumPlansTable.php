@@ -2,24 +2,30 @@
 
 namespace App\Filament\Resources\CurriculumPlans\Tables;
 
+use Filament\Tables\Table;
+use Filament\Actions\EditAction;
+use Filament\Actions\ViewAction;
 use Filament\Actions\ActionGroup;
+use Filament\Actions\ImportAction;
+use Filament\Tables\Grouping\Group;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
-use Filament\Actions\EditAction;
-use Filament\Actions\ForceDeleteBulkAction;
 use Filament\Actions\RestoreBulkAction;
-use Filament\Actions\ViewAction;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Filters\TrashedFilter;
-use Filament\Tables\Grouping\Group;
-use Filament\Tables\Table;
+use Filament\Actions\ForceDeleteBulkAction;
+use App\Filament\Imports\CurriculumPlanImporter;
 
 class CurriculumPlansTable
 {
     public static function configure(Table $table): Table
     {
         return $table
+            ->headerActions([
+                ImportAction::make()
+                    ->importer(CurriculumPlanImporter::class)
+            ])
             ->groups([
                 'semester',
                 Group::make('academicYear.year_range')
@@ -48,8 +54,9 @@ class CurriculumPlansTable
                 
                 TextColumn::make('cpElements.name')
                     ->label('Elemen CP')
-                    ->bulleted()
-                    ->color('gray'),
+                    ->badge()
+                    ->color('success')
+                    ->bulleted(),
 
                 TextColumn::make('theme')
                     ->label('Tema')

@@ -8,12 +8,13 @@ use Spatie\Permission\Traits\HasRoles;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 
 class User extends Authenticatable
 {
     /** @use HasFactory<\Database\Factories\UserFactory> */
-    use HasFactory, Notifiable, HasRoles;
+    use HasFactory, Notifiable, HasRoles, SoftDeletes;
 
     /**
      * The attributes that are mass assignable.
@@ -24,6 +25,8 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'phone',
+        'address'
     ];
 
     /**
@@ -49,9 +52,16 @@ class User extends Authenticatable
         ];
     }
 
+    // public function children()
+    // {
+    //     return $this->hasMany(Student::class, 'student_parent');
+    // }
+
     public function children()
     {
-        return $this->hasMany(Student::class, 'user_id');
+        return $this->belongsToMany(Student::class, 'student_parent', 'user_id', 'student_id');
     }
+
+
     
 }
