@@ -13,6 +13,7 @@ use Filament\Actions\ViewAction;
 use Filament\Resources\Resource;
 use Filament\Actions\ActionGroup;
 use Filament\Actions\DeleteAction;
+use Filament\Actions\ImportAction;
 use Filament\Actions\RestoreAction;
 use Filament\Support\Icons\Heroicon;
 use Filament\Actions\BulkActionGroup;
@@ -22,6 +23,7 @@ use Filament\Actions\ForceDeleteAction;
 use Filament\Actions\RestoreBulkAction;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Forms\Components\TextInput;
+use App\Filament\Imports\StudentImporter;
 use Filament\Forms\Components\DatePicker;
 use Illuminate\Database\Eloquent\Builder;
 use Filament\Tables\Filters\TrashedFilter;
@@ -116,6 +118,10 @@ class StudentResource extends Resource
     public static function table(Table $table): Table
     {
         return $table
+            ->headerActions([
+                ImportAction::make()
+                    ->importer(StudentImporter::class)
+            ])
             ->columns([
                 TextColumn::make('nisn')
                     ->label('NISN'),

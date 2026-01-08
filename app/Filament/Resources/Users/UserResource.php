@@ -7,12 +7,14 @@ use BackedEnum;
 use App\Models\User;
 use Filament\Tables\Table;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Str;
 use Filament\Schemas\Schema;
 use Filament\Actions\EditAction;
 use Filament\Actions\ViewAction;
 use Filament\Resources\Resource;
 use Filament\Actions\ActionGroup;
 use Filament\Actions\DeleteAction;
+use Filament\Actions\ImportAction;
 use Filament\Actions\RestoreAction;
 use Filament\Support\Icons\Heroicon;
 use Illuminate\Support\Facades\Auth;
@@ -21,9 +23,11 @@ use Filament\Actions\BulkActionGroup;
 use Filament\Forms\Components\Select;
 use Filament\Schemas\Components\Grid;
 use Filament\Schemas\Components\Icon;
+use App\Filament\Imports\UserImporter;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\ForceDeleteAction;
 use Filament\Actions\RestoreBulkAction;
+use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Forms\Components\TextInput;
 use Filament\Schemas\Components\Section;
@@ -122,9 +126,12 @@ class UserResource extends Resource
                     ->label('Nama'),
                 TextEntry::make('email')
                     ->label('Email'),
-                // TextEntry::make('roles.name')
-                //     ->badge()
-                //     ->placeholder('-'),
+                TextEntry::make('phone')
+                    ->label('No. Telepon')
+                    ->placeholder('-'),
+                TextEntry::make('address')
+                    ->label('Alamat')
+                    ->placeholder('-'),
                 TextEntry::make('created_at')
                     ->dateTime()
                     ->placeholder('-'),
@@ -137,6 +144,10 @@ class UserResource extends Resource
     public static function table(Table $table): Table
     {
         return $table
+            ->headerActions([
+                ImportAction::make()
+                    ->importer(UserImporter::class)
+            ])
             ->columns([
                 TextColumn::make('roles.name')
                     ->visible(fn () => ! auth()->user()?->hasRole('teacher'))
@@ -148,15 +159,35 @@ class UserResource extends Resource
                         default       => 'gray',
                     })
                     ->placeholder('Belum diatur'),
+
                 TextColumn::make('name')
                     ->label('Nama')
                     ->searchable(),
+
                 TextColumn::make('email')
                     ->label('Email address')
                     ->copyable()
                     ->copyMessage('Email disalin')
                     ->copyMessageDuration(1500)
                     ->searchable(),
+
+                // Tambahkan kolom virtual untuk password awal
+                // TextColumn::make('initial_password')
+                //     ->label('Password Awal')
+                //     ->getStateUsing(function ($record) {
+                //         if (!$record->phone || !$record->name) {
+                //             return '-';
+                //         }
+
+                //         // Rumus yang sama dengan di Importer
+                //         $firstWord = Str::of($record->name)->before(' ')->lower();
+                //         $lastDigits = substr($record->phone, -3);
+
+                //         return $firstWord . $lastDigits;
+                //     })
+                //     ->copyable() // Agar admin bisa copy password dengan sekali klik
+                //     ->color('gray'),
+
                 TextColumn::make('phone')
                     ->label('No. Telepon')
                     ->copyable()
@@ -164,12 +195,14 @@ class UserResource extends Resource
                     ->placeholder('Belum diatur')
                     ->copyMessageDuration(1500)
                     ->searchable(),
+
                 TextColumn::make('children.name')
                     ->label('Anak')
                     ->placeholder('Belum diatur')
                     ->searchable()
                     ->visible(fn () => Auth::user()?->hasRole('teacher'))
                     ->bulleted(),
+
                 TextColumn::make('address')
                     ->label('Alamat')
                     ->copyable()
@@ -177,10 +210,21 @@ class UserResource extends Resource
                     ->copyMessageDuration(1500)
                     ->placeholder('Belum diatur')
                     ->searchable(),
+                
+                // IconColumn::make('email_verified_at')
+                //     ->label('Verifikasi')
+                //     ->boolean() // Secara otomatis menganggap NOT NULL sebagai true dan NULL sebagai false
+                //     ->trueIcon('heroicon-o-check-circle')
+                //     ->falseIcon('heroicon-o-x-circle')
+                //     ->trueColor('success')
+                //     ->falseColor('danger')
+                //     ->alignCenter(), // Mengatur posisi ikon di tengah
+
                 TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
+
                 TextColumn::make('updated_at')
                     ->dateTime()
                     ->sortable()

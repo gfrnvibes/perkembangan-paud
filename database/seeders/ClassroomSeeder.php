@@ -22,7 +22,7 @@ class ClassroomSeeder extends Seeder
         // Bikin classroom
         Classroom::firstOrCreate([
             'academic_year_id' => $academicYear->id,
-            'name' => 'Kelompok B2',
+            'name' => 'B',
         ]);
     }
 }

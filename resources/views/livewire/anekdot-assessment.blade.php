@@ -1,5 +1,5 @@
 <div class="container py-4">
-    <div class="card shadow-sm mb-4">
+    <div class="card shadow-sm mb-4 border-0">
         <div class="card-body">
             <h5 class="card-title mb-3"><i class="fas fa-filter me-2"></i>Filter Perkembangan</h5>
             <div class="row g-3">

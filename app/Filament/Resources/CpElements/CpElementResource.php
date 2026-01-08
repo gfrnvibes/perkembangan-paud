@@ -33,6 +33,8 @@ class CpElementResource extends Resource
 
     protected static string | UnitEnum | null $navigationGroup = 'Kurikulum';
 
+    protected static bool $shouldRegisterNavigation = false;
+
     public static function form(Schema $schema): Schema
     {
         return $schema

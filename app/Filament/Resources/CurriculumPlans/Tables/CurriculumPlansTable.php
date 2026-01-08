@@ -58,8 +58,16 @@ class CurriculumPlansTable
                     ->color('success')
                     ->bulleted(),
 
+                TextColumn::make('learningObjectives.description')
+                    ->label('Tujuan Pembelajaran (TP)')
+                    ->bulleted()
+                    ->limitList(3)
+                    ->searchable()
+                    ->expandableLimitedList(),
+
                 TextColumn::make('theme')
                     ->label('Tema')
+                    ->toggleable()
                     ->searchable(),
 
                 TextColumn::make('topics.name')
@@ -67,13 +75,7 @@ class CurriculumPlansTable
                     ->bulleted()
                     ->limitList(3)
                     ->searchable()
-                    ->expandableLimitedList(),
-
-                TextColumn::make('learningObjectives.description')
-                    ->label('Tujuan Pembelajaran')
-                    ->bulleted()
-                    ->limitList(3)
-                    ->searchable()
+                    ->toggleable()
                     ->expandableLimitedList(),
             ])
             ->filters([

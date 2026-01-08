@@ -10,26 +10,25 @@ use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 
 class UserSeeder extends Seeder
 {
-    /**
-     * Run the database seeds.
-     */
     public function run(): void
     {
-        // User::factory(10)->create();
+        // =========================
+        // SUPER ADMIN
+        // =========================
+        $role = Role::firstOrCreate([
+            'name' => 'super_admin',
+            'guard_name' => 'web',
+        ]);
 
-        // 1. Buat / ambil role super_admin
-        $role = Role::firstOrCreate(['name' => 'super_admin', 'guard_name' => 'web']);
-
-        // 2. Buat / ambil user super admin
         $user = User::firstOrCreate(
             ['email' => 'super@admin.com'],
             [
                 'name' => 'Super Admin',
                 'password' => Hash::make('password'),
+                'email_verified_at' => now(),
             ],
         );
 
-        // 3. Assign role (idempotent)
         if (!$user->hasRole($role->name)) {
             $user->assignRole($role);
         }
@@ -43,14 +42,13 @@ class UserSeeder extends Seeder
             'password' => Hash::make('password'),
             'phone' => '081234567890',
             'address' => 'Jl. Merdeka No. 10, Jakarta',
+            'email_verified_at' => now(),
         ]);
 
         $teacher->assignRole('teacher');
 
         // =========================
         // PARENTS (5 orang)
-        // masing-masing punya 2 anak
-        // student id: 1 - 10
         // =========================
         $parents = [
             [
@@ -97,11 +95,10 @@ class UserSeeder extends Seeder
                 'password' => Hash::make('password'),
                 'phone' => $parentData['phone'],
                 'address' => $parentData['address'],
+                'email_verified_at' => now(),
             ]);
 
             $parent->assignRole('parent');
-
-            // attach children (students)
             $parent->children()->attach($parentData['children']);
         }
     }
