@@ -14,12 +14,15 @@
             <ul class="navbar-nav mx-auto mb-2 mb-lg-0 gap-2">
                 <x-nav-link :active="request()->routeIs('/')" href="{{ route('/') }}">Home</x-nav-link>
 
-                @if (Auth::check() && auth()->user()->hasRole('parent'))                    
+                @if (Auth::check() && auth()->user()->hasRole('parent'))
                     <x-nav-link :active="request()->routeIs('cheklist')" href="{{ route('cheklist') }}">Cheklist</x-nav-link>
                     <x-nav-link :active="request()->routeIs('anekdot')" href="{{ route('anekdot') }}">Anekdot</x-nav-link>
                     <x-nav-link :active="request()->routeIs('artwork')" href="{{ route('artwork') }}">Hasil Karya</x-nav-link>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ route('wirechat.chats.chats') }}" target="_blank">Pesan</a>
+                    </li>
                 @endif
-            </ul>   
+            </ul>
             <div class="d-flex gap-2">
                 @guest
                     <a href="{{ route('login') }}" class="btn btn-light fw-bold text-danger">Login</a>

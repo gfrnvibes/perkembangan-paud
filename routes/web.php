@@ -22,3 +22,7 @@ Route::get('logout', [LogoutController::class, 'logout'])->name('logout');
 Route::get('/media/{media}', function (Media $media) {
     return response()->file($media->getPath());
 })->name('media.show');
+
+// Route::get('chats', function () {
+//     return view('wirechat.chats.chats');
+// })->middleware(['web','auth'])->name('chats');

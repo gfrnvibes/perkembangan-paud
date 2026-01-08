@@ -3,18 +3,21 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Wirechat\Wirechat\Panel;
 use App\Models\Master\Student;
 use Spatie\Permission\Traits\HasRoles;
 use Illuminate\Notifications\Notifiable;
-use Illuminate\Database\Eloquent\Relations\HasOne;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Wirechat\Wirechat\Contracts\WirechatUser;
+use Illuminate\Database\Eloquent\Relations\HasOne;
+use Wirechat\Wirechat\Traits\InteractsWithWirechat;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 
-class User extends Authenticatable
+class User extends Authenticatable implements WirechatUser
 {
     /** @use HasFactory<\Database\Factories\UserFactory> */
-    use HasFactory, Notifiable, HasRoles, SoftDeletes;
+    use HasFactory, Notifiable, HasRoles, SoftDeletes, InteractsWithWirechat;
 
     /**
      * The attributes that are mass assignable.
@@ -63,5 +66,24 @@ class User extends Authenticatable
     }
 
 
-    
+        public function canAccessWirechatPanel(Panel $panel): bool
+    {
+        return $this->hasVerifiedEmail();
+    }
+
+    /**
+     * Control whether this user is allowed to create 1-to-1 chats.
+     */
+    public function canCreateChats(): bool
+    {
+        return true;
+    }
+
+    /**
+     * Control whether this user can create group conversations.
+     */
+    public function canCreateGroups(): bool
+    {
+        return true;
+    }
 }

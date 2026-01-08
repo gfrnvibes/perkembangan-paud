@@ -11,6 +11,6 @@ class CreateCurriculumPlan extends CreateRecord
 
     public function getHeading(): string
     {
-        return 'Buat RPP';
+        return 'Buat ATP Mingguan';
     }
 }

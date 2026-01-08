@@ -38,8 +38,8 @@ class UserSeeder extends Seeder
         // TEACHER (1 orang)
         // =========================
         $teacher = User::create([
-            'name' => 'Budi Santoso',
-            'email' => 'budi.guru@example.com',
+            'name' => 'Guru Nurul Amin',
+            'email' => 'guru@gmail.com',
             'password' => Hash::make('password'),
             'phone' => '081234567890',
             'address' => 'Jl. Merdeka No. 10, Jakarta',
@@ -55,35 +55,35 @@ class UserSeeder extends Seeder
         $parents = [
             [
                 'name' => 'Siti Aminah',
-                'email' => 'siti.parent1@example.com',
+                'email' => 'siti@gmail.com',
                 'phone' => '081111111111',
                 'address' => 'Jl. Kenanga No. 1, Bandung',
                 'children' => [1, 2],
             ],
             [
                 'name' => 'Andi Pratama',
-                'email' => 'andi.parent2@example.com',
+                'email' => 'andi@gmail.com',
                 'phone' => '082222222222',
                 'address' => 'Jl. Melati No. 2, Surabaya',
                 'children' => [3, 4],
             ],
             [
                 'name' => 'Rina Lestari',
-                'email' => 'rina.parent3@example.com',
+                'email' => 'rina@gmail.com',
                 'phone' => '083333333333',
                 'address' => 'Jl. Mawar No. 3, Yogyakarta',
                 'children' => [5, 6],
             ],
             [
                 'name' => 'Dedi Kurniawan',
-                'email' => 'dedi.parent4@example.com',
+                'email' => 'dedi@gmail.com',
                 'phone' => '084444444444',
                 'address' => 'Jl. Anggrek No. 4, Semarang',
                 'children' => [7, 8],
             ],
             [
                 'name' => 'Nur Aisyah',
-                'email' => 'aisyah.parent5@example.com',
+                'email' => 'aisyah@gmail.com',
                 'phone' => '085555555555',
                 'address' => 'Jl. Teratai No. 5, Malang',
                 'children' => [9, 10],

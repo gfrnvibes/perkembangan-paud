@@ -22,7 +22,7 @@ class DatabaseSeeder extends Seeder
             StudentSeeder::class,
             RoleSeeder::class,
             UserSeeder::class,
-            CpElementSeeder::class
+            // CpElementSeeder::class
         ]);
     }
 }

@@ -1,4 +1,9 @@
 <div class="container py-3">
+{{-- @auth
+<div>
+    <livewire:wirechat/>
+</div>
+@endauth --}}
     <section class="py-lg-5 py-4 mb-5 bg-playful rounded-4 px-4 px-lg-5">
         <div class="row align-items-center g-4">
             <div class="col-12 col-lg-6" data-aos="fade-right">

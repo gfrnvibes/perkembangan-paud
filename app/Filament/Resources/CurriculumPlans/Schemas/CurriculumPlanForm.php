@@ -124,7 +124,7 @@ class CurriculumPlanForm
                                     ])
                                     ->addActionlabel('Tambah Topik')
                                     ->grid(1),
-                                                                Repeater::make('learningObjectives')
+                                 Repeater::make('learningObjectives')
                                     ->label('Tujuan Pembelajaran')
                                     ->table([
                                         TableColumn::make('Deskripsi TP'),

@@ -1,6 +1,6 @@
-/* * {
-    font-family: "Lexend", monospace;
-} */
+* {
+    font-family: "Google Sans", sans-serif;
+}
 
 .background-layer {
     background: url("/assets/images/cloudy.svg") no-repeat center center fixed;

@@ -10,9 +10,9 @@
         integrity="sha384-4Q6Gf2aSP4eDXB8Miphtr37CMZZQ5oXLH2yaXMJ2w8e2ZtHTl7GptT4jmndRuHDT" crossorigin="anonymous">
 
     {{-- Font --}}
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@100..900&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Google+Sans:ital,opsz,wght@0,17..18,400..700;1,17..18,400..700&display=swap" rel="stylesheet">
 
     {{-- Icon --}}
     <link rel="shortcut icon" href="{{ asset('assets/images/paud.png') }}">
@@ -30,6 +30,7 @@
     {{-- <script src="https://cdn.jsdelivr.net/npm/chart.js"></script> --}}
     @livewireStyles
     @stack('styles')
+    @wirechatStyles
 </head>
 
 <body>
@@ -100,6 +101,7 @@
     </script> --}}
     @livewireScripts
     @stack('scripts')
+    @wirechatAssets(panel:'chats')
 </body>
 
 </html>
