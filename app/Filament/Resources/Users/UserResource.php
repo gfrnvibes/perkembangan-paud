@@ -20,6 +20,7 @@ use Filament\Support\Icons\Heroicon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Filament\Actions\BulkActionGroup;
+use Filament\Forms\Components\Hidden;
 use Filament\Forms\Components\Select;
 use Filament\Schemas\Components\Grid;
 use Filament\Schemas\Components\Icon;
@@ -65,6 +66,9 @@ class UserResource extends Resource
                         ->schema([
                             Grid::make(1) // force atas-bawah
                                 ->schema([
+                                    Hidden::make('email_verified_at')
+                                        ->default(fn ($operation) => $operation === 'create' ? now() : null),
+                                        
                                     TextInput::make('name')
                                         ->label('Nama')
                                         ->required(),
