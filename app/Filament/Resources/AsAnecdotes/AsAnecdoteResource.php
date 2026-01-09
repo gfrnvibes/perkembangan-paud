@@ -43,7 +43,7 @@ class AsAnecdoteResource extends Resource
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::DocumentText;
     protected static string | UnitEnum | null $navigationGroup = 'Assessment';
-    protected static ?string $navigationLabel = 'Anekdot';
+    protected static ?string $navigationLabel = 'Catatan Anekdot';
     protected static ?string $slug = 'anekdot';
 
     public static function form(Schema $schema): Schema

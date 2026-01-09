@@ -33,13 +33,16 @@ public static function getColumns(): array
             // fillRecordUsing(null) agar tidak mencoba masuk ke tabel students
             ImportColumn::make('parent_name')
                 ->fillRecordUsing(fn ($record, $state) => null)
-                ->label('Nama Orang Tua'),
+                ->label('Nama'),
             ImportColumn::make('parent_email')
                 ->fillRecordUsing(fn ($record, $state) => null)
-                ->label('Email Orang Tua'),
+                ->label('Email'),
             ImportColumn::make('parent_phone')
                 ->fillRecordUsing(fn ($record, $state) => null)
-                ->label('No. HP Orang Tua'),
+                ->label('No. HP'),
+            ImportColumn::make('parent_address')
+                ->fillRecordUsing(fn ($record, $state) => null)
+                ->label('Alamat'),
         ];
     }
 
