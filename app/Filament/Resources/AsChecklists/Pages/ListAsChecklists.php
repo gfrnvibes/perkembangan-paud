@@ -14,7 +14,7 @@ class ListAsChecklists extends ListRecords
     {
         return [
             CreateAction::make()
-                ->label('Tambah Checklist'),
+                ->label('Tambah'),
         ];
     }
 }

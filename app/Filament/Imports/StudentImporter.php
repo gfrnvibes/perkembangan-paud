@@ -5,6 +5,7 @@ namespace App\Filament\Imports;
 use App\Models\User;
 use Illuminate\Support\Str;
 use App\Models\Master\Student;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Number;
 use Illuminate\Support\Facades\Hash;
 use Filament\Actions\Imports\Importer;
@@ -25,6 +26,7 @@ public static function getColumns(): array
                 ->label('Nama Siswa'),
             ImportColumn::make('dob')
                 ->label('Tanggal Lahir'),
+                
             ImportColumn::make('gender'),
 
             // Kolom VIRTUAL untuk data Orang Tua (User)
@@ -43,6 +45,8 @@ public static function getColumns(): array
 
     public function resolveRecord(): Student
     {
+        \Illuminate\Support\Facades\Log::info('Memproses NISN: ' . $this->data['nisn']);
+
         return Student::firstOrNew([
             'nisn' => $this->data['nisn'],
         ]);

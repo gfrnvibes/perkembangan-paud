@@ -45,4 +45,9 @@ class CreateAsChecklist extends CreateRecord
     {
         return $this->getResource()::getUrl('index');
     }
+
+        public function getHeading(): string
+    {
+        return 'Buat Instrument Observasi';
+    }
 }
