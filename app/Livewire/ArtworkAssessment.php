@@ -19,24 +19,26 @@ class ArtworkAssessment extends Component
     public $academic_year_id;
     public $status;
 
-    public function mount()
-    {
-        $user = Auth::user();
+public function mount()
+{
+    $user = Auth::user();
 
-        abort_unless($user->hasRole('parent'), 403);
+    // Pastikan user sudah login DAN memiliki role 'parent'
+    if (!$user || !$user->hasRole('parent')) {
+        abort(403);
+    }
 
-        $childIds = Auth::user()
-            ->children()
-            ->pluck('students.id');
-        if ($childIds->isNotEmpty()) {
-            $latest = AsArtwork::whereIn('student_id', $childIds)->latest('date')->first();
+    $childIds = $user->children()->pluck('students.id');
+    
+    if ($childIds->isNotEmpty()) {
+        $latest = AsArtwork::whereIn('student_id', $childIds)->latest('date')->first();
 
-            if ($latest) {
-                $this->student_id = $latest->student_id;
-                $this->date = $latest->date;
-            }
+        if ($latest) {
+            $this->student_id = $latest->student_id;
+            $this->date = $latest->date;
         }
     }
+}
 
     public function getChildrenProperty()
     {

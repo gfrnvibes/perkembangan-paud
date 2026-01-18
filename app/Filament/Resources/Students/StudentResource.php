@@ -86,13 +86,13 @@ class StudentResource extends Resource
                     ->multiple()
                     ->required()
                     ->native(false),
-                // Select::make('parents')
-                //     ->label('Nama Orang Tua')
-                //     ->relationship('parents', 'name', fn (Builder $query) =>
-                //             $query->whereHas('roles', fn ($q) => $q->where('name', 'parent')))
-                //     ->preload()
-                //     // ->multiple()
-                //     ->native(false)
+                Select::make('parents')
+                    ->label('Nama Orang Tua')
+                    ->relationship('parents', 'name', fn (Builder $query) =>
+                            $query->whereHas('roles', fn ($q) => $q->where('name', 'parent')))
+                    ->preload()
+                    // ->multiple()
+                    ->native(false)
             ]);
     }
 
