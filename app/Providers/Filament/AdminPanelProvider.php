@@ -90,7 +90,7 @@ class AdminPanelProvider extends PanelProvider
                     ->navigationGroup('Peran Pengguna'),
             ])
             ->navigationItems([
-                NavigationItem::make('Chats')
+                NavigationItem::make('Pesan')
                     ->url('/chats')
                     ->icon('heroicon-o-chat-bubble-left-right')
                 ])
