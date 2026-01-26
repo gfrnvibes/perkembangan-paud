@@ -4,14 +4,23 @@ namespace App\Providers\Filament;
 
 use Filament\Panel;
 use Filament\PanelProvider;
+use Filament\Actions\Action;
 use Filament\Pages\Dashboard;
 use App\Filament\Pages\Auth\Login;
 use Filament\Support\Colors\Color;
+use Filament\View\PanelsRenderHook;
 use Filament\Widgets\AccountWidget;
+use Filament\Enums\UserMenuPosition;
+use Illuminate\Support\Facades\Blade;
+use Filament\Navigation\NavigationItem;
 use Filament\Widgets\FilamentInfoWidget;
+use Wirechat\Wirechat\Livewire\Chat\Chat;
 use Filament\Http\Middleware\Authenticate;
+use Filament\Navigation\NavigationBuilder;
+use Wirechat\Wirechat\Livewire\Chats\Chats;
 use App\Filament\Pages\Auth\TeacherRegister;
 use App\Http\Middleware\BlockParentFromAdmin;
+use App\Filament\Resources\Users\UserResource;
 use Illuminate\Session\Middleware\StartSession;
 use Illuminate\Cookie\Middleware\EncryptCookies;
 use Filament\Http\Middleware\AuthenticateSession;
@@ -31,6 +40,7 @@ class AdminPanelProvider extends PanelProvider
             ->default()
             ->id('admin')
             ->path('admin')
+            ->viteTheme('resources/css/filament/admin/theme.css')
             ->login()
             ->registration()
             ->spa()
@@ -48,6 +58,14 @@ class AdminPanelProvider extends PanelProvider
                 AccountWidget::class,
                 FilamentInfoWidget::class,
             ])
+            ->renderHook(
+                PanelsRenderHook::HEAD_END,
+                fn (): string => Blade::render('@wirechatStyles'),
+            )
+            ->renderHook(
+                PanelsRenderHook::BODY_END,
+                fn (): string => Blade::render('@wirechatAssets'),
+            )
             ->middleware([
                 EncryptCookies::class,
                 AddQueuedCookiesToResponse::class,
@@ -69,9 +87,13 @@ class AdminPanelProvider extends PanelProvider
             ->favicon(asset('images/paud.png'))
             ->plugins([
                 FilamentShieldPlugin::make()
-                    ->navigationGroup('Peran Pengguna')
-                ,
+                    ->navigationGroup('Peran Pengguna'),
             ])
+            ->navigationItems([
+                NavigationItem::make('Chats')
+                    ->url('/chats')
+                    ->icon('heroicon-o-chat-bubble-left-right')
+                ])
             ;
     }
 }
